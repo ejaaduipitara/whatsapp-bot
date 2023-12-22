@@ -11,7 +11,7 @@ const getBotMessage = (language, botId, key) => {
 }
 
 const getBotWelcomeMessage = (language='en',botId) => {
-    return getBotMessage(language,botId, "hi");
+    return getBotMessage(language,botId, "Welcome");
 }
 
 const getBotSelection = (lang ='en') => {

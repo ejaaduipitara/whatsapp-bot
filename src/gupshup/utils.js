@@ -2,8 +2,10 @@
  * Check user is visiting first time
  * @param {*} incomingMsg 
  */
-const isFirstTimeUser = (incomingMsg) => {
-    if(incomingMsg?.context?.message_id) {
+const userSession = require("../session");
+
+const isFirstTimeUser = (req,incomingMsg) => {
+    if(!userSession?.getUserLanguage(req,incomingMsg)) {
         console.log("❌ isFirstTimeUser");
         return false;
     } else {

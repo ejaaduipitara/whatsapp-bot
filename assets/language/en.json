@@ -1,157 +1,139 @@
 {
-    "bot_1": {
-        "hi": {
-            "message": [
+    "lang_selection": {
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "quick_reply",
+            "msgid": "qr1",
+            "content": {
+                "type": "text",
+                "header": "Welcome to e-JaadhuPitaraa",
+                "text": "Namaste 🙏  \n\nSelect language",
+                "caption": "Please select below language option to proceed"
+            },
+            "options": [
                 {
-                    "recipient_type": "individual",
-                    "message_type": "text",
-                    "x-apiheader": "custom_data",
-                    "type_text": [
-                        {
-                            "preview_url": "false",
-                            "content": "You can create your own story. What kind of story do you want? For example, I can tell a story about a boy who saw the sea for the first time, or a story about a girl riding a horse"
-                        }
-                    ]
+                    "type": "text",
+                    "title": "English",
+                    "postbackText": "lang__en"
+                },
+                {
+                    "type": "text",
+                    "title": "हिंदी",
+                    "postbackText": "lang__hi"
                 }
             ]
+        },
+        "src.name": "TestDJP"
+    },
+    "bot_selection": {
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "quick_reply",
+            "msgid": "qr1",
+            "content": {
+                "type": "text",
+                "header": "e-JaaduiPitara",
+                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n What do you want? ",
+                "caption": "Please select below option to proceed"
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "title": "Story Sakhi",
+                    "postbackText": "bot__bot_1"
+                },
+                {
+                    "type": "text",
+                    "title": "Teacher Activities",
+                    "postbackText": "bot__bot_2"
+                },
+                {
+                    "type": "text",
+                    "title": "Parent Activities",
+                    "postbackText": "bot__bot_3"
+                }
+            ]
+        },
+        "src.name": "TestDJP"
+    },
+    "bot_1": {
+        "Welcome": {
+            "channel": "whatsapp",
+            "source": "917834811114",
+            "destination": "917892950883",
+            "message": {
+                "type": "text",
+                "text": "You can create your own story. What kind of story do you want? For example, I can tell a story about a boy who saw the sea for the first time, or a story about a girl riding a horse"
+            },
+            "src.name": "TestDJP"
         }
     },
     "bot_2": {
-        "hi": "What kind of activity do you want? For example, I can suggest you how to teach sorting to your children in a class"
+        "Welcome": {
+            "channel": "whatsapp",
+            "source": "917834811114",
+            "destination": "917892950883",
+            "message": {
+                "type": "text",
+                "text": "What kind of activity do you want? For example, I can suggest you how to teach sorting to your children in a class"
+            },
+            "src.name": "TestDJP"
+        }
     },
     "bot_3": {
-        "hi": "What kind of activity do you want? For example, I can suggest you how you can engage your child to learn about colors"
-    },
-    "bot_selection": {
-        "message": [
-            {
-                "message_type": "interactive",
-                "recipient_type": "individual",
-                "recipient_whatsapp": "919964300623",
-                "x-apiheader": "custom_data",
-                "source": "e4aba266d56a3726c36a2053d70c989d",
-                "type_interactive": [
-                    {
-                        "type": "button",
-                        "header": {
-                            "text": "e-JaaduiPitara",
-                            "type": "text"
-                        },
-                        "body": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n What do you want? ",
-                        "action": [{
-                            "buttons": [
-                                {
-                                    "reply": {
-                                        "id": "bot__bot_1",
-                                        "title": "A Story"
-                                    },
-                                    "type": "reply"
-                                },
-                                {
-                                    "reply": {
-                                        "id": "bot__bot_2",
-                                        "title": "Teacher Activities"
-                                    },
-                                    "type": "reply"
-                                },
-                                {
-                                    "reply": {
-                                        "id": "bot__bot_3",
-                                        "title": "Parent Activities"
-                                    },
-                                    "type": "reply"
-                                }
-                            ]
-                    }]
-                    }
-                ]
-            }
-        ]
-    },
-    "lang_selection": {
-        "message": [
-            {
-                "recipient_whatsapp": "919964300623",
-                "recipient_type": "individual",
-                "message_type": "interactive",
-                "x-apiheader": "custom_data",
-                "source": "e4aba266d56a3726c36a2053d70c9899",
-                "type_interactive": [
-                    {
-                        "type": "button",
-                        "header": {
-                            "type": "text",
-                            "text": "Welcome to e-JaadhuPitaraa"
-                        },
-                        "body": "Namaste 🙏  \n\nSelect language",
-                        "action": [
-                            {
-                                "buttons": [
-                                    {
-                                        "type": "reply",
-                                        "reply": {
-                                            "id": "lang__en",
-                                            "title": "English"
-                                        }
-                                    },
-                                    {
-                                        "type": "reply",
-                                        "reply": {
-                                            "id": "lang__hi",
-                                            "title": "हिंदी"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-    "footer_message": {
-        "message": [
-            {
-                "recipient_type": "individual",
-                "message_type": "text",
-                "x-apiheader": "custom_data",
-                "type_text": [
-                    {
-                        "preview_url": "false",
-                        "content": "\n \n Hope you liked it! \n -If you want to go to previous menu enter “*”. \n -If you want to go to main menu enter “#”"
-                    }
-                ]
-            }
-        ]
-    },
-    "bot_answer": {
-        "message": [
-            {
-                "recipient_type": "individual",
-                "message_type": "text",
-                "x-apiheader": "custom_data",
-                "type_text": [
-                    {
-                        "preview_url": "false",
-                        "content": ""
-                    }
-                ]
-            }
-        ]
+        "Welcome": {
+            "channel": "whatsapp",
+            "source": "917834811114",
+            "destination": "917892950883",
+            "message": {
+                "type": "text",
+                "text": "What kind of activity do you want? For example, I can suggest you how you can engage your child to learn about colors"
+            },
+            "src.name": "TestDJP"
+        }
     },
     "loading_message": {
-        "message": [
-            {
-                "recipient_type": "individual",
-                "message_type": "text",
-                "x-apiheader": "custom_data",
-                "type_text": [
-                    {
-                        "preview_url": "false",
-                        "content": "Preparing response! Please wait!!"
-                    }
-                ]
-            }
-        ]
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "text",
+            "text": "Preparing response! Please wait!!"
+        },
+        "src.name": "TestDJP"
+    },
+    "bot_answer_text": {
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "text",
+            "text": " "
+        },
+        "src.name": "TestDJP"
+    },
+    "bot_answer_audio": {
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "Audio",
+            "url": "https://filemanager.gupshup.io/wa/b5d1cf44-dfbb-4ce7-8435-fcf76af13eaa/wa/media/4199c74c-9441-41ab-9ec5-815a23064b8b?download=false"
+        },
+        "src.name": "TestDJP"
+    },
+    "footer_message": {
+        "channel": "whatsapp",
+        "source": "917834811114",
+        "destination": "917892950883",
+        "message": {
+            "type": "text",
+            "text": "\n \n Hope you liked it! \n -If you want to go to previous menu enter “*”. \n -If you want to go to main menu enter “#”"
+        },
+        "src.name": "TestDJP"
     }
 }
