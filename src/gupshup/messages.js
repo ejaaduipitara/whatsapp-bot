@@ -1,7 +1,6 @@
 const language = require("../language");
 const userSession = require("../session");
 const axios = require("axios");
-const botMessage = require('../botMessage');
 const qs = require('qs');
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
@@ -59,7 +58,7 @@ const sendBotWelcomeMsg = (req, msg) => {
  * @param {*} msg 
  */
 const sendBotResponse = async (req, msg) => {
-  console.log("⭆ sendBotResponse");
+  console.log("⭆ sendBotResponse \n\n\n");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
 
@@ -74,6 +73,7 @@ const sendBotResponse = async (req, msg) => {
  * @param {*} userBot 
  */
 const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
+  console.log("⭆ sendBotLoadingMsg \n");
   let body = language.getMessage(userLang, null, 'loading_message');
   await sendMessage(body, msg);
 }
@@ -86,7 +86,7 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
-  console.log("⭆ sendBotAnswer");
+  console.log("⭆ sendBotAnswer\n");
   // console.log('msgcheck', JSON.stringify(msg))
   await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
@@ -94,9 +94,9 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
 
-      bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
-      bodyMessage.message.url = queryResponse?.output?.audio;
-      await sendMessage(bodyMessage, msg)
+      let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
+      audioMessage.message.url = "https://www.buildquickbots.com/whatsapp/media/sample/audio/sample02.mp3";//queryResponse?.output?.audio;
+      await sendMessage(audioMessage, msg)
     })
     .catch(err => {
       console.error('Error in fetchQueryRespone:', err);
@@ -110,6 +110,7 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
+  console.log("⭆ sendBotReplyFooter \n");
   let body = language.getMessage(userLang, null, 'footer_message');
   await sendMessage(body, msg);
 }
@@ -119,32 +120,43 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  * @param {*} body 
  * @param {*} incomingMsg 
  */
-const sendMessage = async (body, incomingMsg) => {
+const sendMessage = async (body, msg) => {
+  let incomingMsg = JSON.parse(JSON.stringify(msg));
   console.log('⭆ sendMessage', body);
   body = decorateWAMessage(body, incomingMsg);
 
   let data = qs.stringify(body);
-  
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'https://api.gupshup.io/wa/api/v1/msg',
-    headers: {
-      'Cache-Control': 'no-cache',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'apiKey': WA_PROVIDER_TOKEN,
-      'cache-control': 'no-cache'
-    },
-    data: data
-  };
+  try {
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.gupshup.io/wa/api/v1/msg',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'apiKey': WA_PROVIDER_TOKEN
+      },
+      data: data
+    };
 
-  await axios.request(config)
-    .then((response) => {
-      // console.log(JSON.stringify(response.data));
+    await axios(config)
+    .then((resp)=> {
+      console.log("sendMessage success - ", resp.status);
+      return resp;
     })
     .catch((error) => {
-      // console.log(error);
-    });
+      console.log(error.toJSON());
+    })
+    // request
+    // .then((response) => {
+    //     console.log(JSON.stringify(response.data));
+    // })
+    // .catch((error) => {
+    //     console.log(error);
+    // });
+  } catch (error) {
+    console.log("webhook => error occurred with status code:", error);
+  } 
 }
 
 
@@ -221,13 +233,12 @@ const setMessageTo = (body, incomingMsg) => {
  */
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   console.log("⭆ fetchQueryRespone");
-  
-  // console.log('fetchQueryRespone--invmsg', incomingMsg);
+  console.log(msg);
   let data = {
-    "input": {
+    input: {
       "language": userLang
     },
-    "output": {
+    output: {
       "format": "audio"
     }
   };
@@ -243,7 +254,7 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
 
   // Updating text/audio property to the input request
   if (msg?.type === "text" || msg?.type === "audio") {
-    data.input[msg.type] = msg?.input?.[msg.type];
+    data.input[msg.type] = msg?.input[msg.type];
   }
 
   var axiosConfig = {
