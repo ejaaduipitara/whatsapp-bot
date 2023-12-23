@@ -39,6 +39,21 @@ Before you begin, ensure you have the following installed:
 
     In `.env `file set your respective keys and values
     
+  ACTIVITY_SAKHI_URL: "http://144.24.130.223:7081/v1/query"  # Activity sakhi bot url for parent & teacher  
+  STORY_SAKHI_UTL: "http://152.67.183.46:7081/v1/query"  # Story sakhi bot url 
+  BOT_API_TOKEN:""   # BOT API token - If required
+  REDIS_HOST: "http://localhost"  
+  REDIS_PORT: "6379"  
+  REDIS_INDEX: "0"  
+  PORT: 3010  
+  CHAR_LIMIT: 1024   
+  TELEMETRY_SERVICE_URL: "http://152.67.162.156:9001/v1/telemetry"   # Telemetry servie endpoint to send telemetry events  
+  API_TOKEN: 'xxxxxxxx'   # For telemetry server  
+  APP_ENV: "dev"  #For telemetry pdata  
+  APP_NAME: "djp"  #For telemetry pdata  
+  WA_PROVIDER_NUMBER: "917834811114"  # The phone number attached to WhatsApp service provider  
+  WA_PROVIDER_APPNAME: "TestDJP"  # Name of the app given for the above number in WhatsApp service provider portal  
+  WA_PROVIDER_TOKEN: "XXXX"  
 
 4. Start the application:
 

@@ -3,11 +3,11 @@ const axios = require("axios");
 const fs = require('fs');
 const language = require("../language");
 const userSession = require("../session");
-const utils = require('./utils');
+// const utils = require('./utils');
 const messages = require('./messages');
 const inBoundGP = require('./InBound');
 const botFile = fs.readFileSync('assets/bots.json', 'utf-8');
-const telemetryService = require('../telemetryService');
+// const telemetryService = require('../telemetryService');
 // const footerFile = fs.readFileSync('assets/footer.json', 'utf-8');
 
 const NETCORE_TOKEN = process.env.WA_PROVIDER_TOKEN;
@@ -16,26 +16,13 @@ const NETCORE_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const bots = JSON.parse(botFile);
 // const footer = JSON.parse(footerFile);
 
-var isLangSelection, isBotSelection;
-let telemetry = new telemetryService();
+var isLangSelected, isBotSelected;
+// let telemetry = new telemetryService();
 
 const webhook = async (req, res) => {
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
-    console.log("webhook:tt ", incomingMsg);
-    // let incomingMsg, msg, toMobile;
-    // incomingMsg = req.body?.payload;
-    
-
-    // if(!incomingMsg) {
-    //     // For interactive message
-    //     incomingMsg = req.body?.message;
-    //     toMobile = {"recipient_whatsapp": msg?.recipient_whatsapp};
-    // } else {
-    //    toMobile = {"to": msg?.from}
-    // }
-    msg = incomingMsg
-    // let userSelection = await req?.session?.lang || null;
-    console.log("IncomingMsg", JSON.stringify(msg));
+    let msg = incomingMsg;
+    // console.log("IncomingMsg", JSON.stringify(msg));
     
     if(!msg){
         console.log("XXX no message", msg);
@@ -43,28 +30,27 @@ const webhook = async (req, res) => {
         return;
     } 
     // telemetry Initializing
-    telemetry.initEvent()
-    userSession.createSession(req, msg);
-
-    isLangSelection = userSession.getUserLanguage(req, msg);
-    isBotSelection = userSession.getUserBot(req, msg);
+    // telemetry.initEvent();
+    let isSessionExist = userSession.createSession(req, msg);
+    isLangSelected = userSession.getUserLanguage(req, msg);
+    isBotSelected = userSession.getUserBot(req, msg);
     
-    console.log('req session', req.session);
-    console.log("languageSelection: ", isLangSelection, ' BotSelection: ', isBotSelection);
+    console.log(`\n req session: ${JSON.stringify(req.session)} `);
+    console.log(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
 
-    if (utils.isFirstTimeUser(req,msg) || msg?.type == '#') {
-        console.log("First time user");
-        telemetry.startEvent(req, msg)
+    if (!isSessionExist || msg?.type == '#') {
+        console.log("👨 First time user");
+        // telemetry.startEvent(req, msg);
         messages.sendLangSelection(msg);
         res.sendStatus(200);
-    } else if (!isLangSelection) {
-        console.log("🇮🗣 Language selected");
+    } else if (!isLangSelected || msg?.type == '*') {
+        console.log("📚 Language selected");
         userSession.setUserLanguage(req, msg);
         messages.sendBotSelection(req, msg);
         res.sendStatus(200);
-    } else if (!isBotSelection){
-        console.log("🤖〠 Bot selected");
+    } else if (!isBotSelected){
+        console.log("🤖 Bot selected");
         userSession.setUserBot(req, msg);
         messages.sendBotWelcomeMsg(req, msg);
         res.sendStatus(200);
@@ -88,7 +74,7 @@ const webhook = async (req, res) => {
 
         res.sendStatus(200);
     }
-    telemetry.logEvent(req, msg)
+    // telemetry.logEvent(req, msg);
 
     
 }

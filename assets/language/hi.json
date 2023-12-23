@@ -3,7 +3,6 @@
         "Welcome": {
             "channel": "whatsapp",
             "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "आप अपनी खुद की कहानी बना सकते हैं. आप किस तरह की कहानी चाहते हैं? उदाहरण के लिए, मैं एक ऐसे लड़के की कहानी बता सकता हूँ जिसने पहली बार समुद्र देखा, या घोड़े पर सवार एक लड़की की कहानी बता सकता हूँ"
@@ -15,7 +14,6 @@
         "Welcome": {
             "channel": "whatsapp",
             "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "आप किस प्रकार की गतिविधि चाहते हैं? उदाहरण के लिए, मैं आपको सुझाव दे सकता हूं कि कक्षा में अपने बच्चों को छंटाई कैसे सिखाएं"
@@ -27,7 +25,6 @@
         "Welcome": {
             "channel": "whatsapp",
             "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "आप किस प्रकार की गतिविधि चाहते हैं? उदाहरण के लिए, मैं आपको सुझाव दे सकता हूं कि आप अपने बच्चे को रंगों के बारे में सीखने में कैसे शामिल कर सकते हैं"
@@ -38,7 +35,6 @@
     "bot_selection": {
         "channel": "whatsapp",
         "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "quick_reply",
             "msgid": "qr1",
@@ -71,7 +67,6 @@
     "lang_selection": {
         "channel": "whatsapp",
         "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "quick_reply",
             "msgid": "qr1",
@@ -99,27 +94,15 @@
     "footer_message": {
         "channel": "whatsapp",
         "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "text",
             "text": "\n \n आशा है आपको यह पसंद आया होगा! \n -यदि आप पिछले मेनू पर जाना चाहते हैं तो '*' दर्ज करें। \n -यदि आप मुख्य मेनू पर जाना चाहते हैं तो '#' दर्ज करें"
         },
         "src.name": "TestDJP"
     },
-    "bot_answer": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
-        "message": {
-            "type": "text",
-            "text": ""
-        },
-        "src.name": "TestDJP"
-    },
     "loading_message": {
         "channel": "whatsapp",
         "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "text",
             "text": "प्रतिक्रिया तैयार करना! कृपया प्रतीक्षा करें!!"

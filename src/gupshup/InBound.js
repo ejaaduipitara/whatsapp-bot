@@ -27,13 +27,13 @@ class InBoundGupshup extends InBound {
 
     constructor(reqBody) {
         super(reqBody);
-        let payload = reqBody.payload;
+        let payload = reqBody?.payload;
         this.id = payload.id;
         this.timestamp = reqBody.timestamp,
-        this.fromMobile = payload.sender.phone;
-        this.userName = payload.sender.name
-        this.type = payload.type;
-        this.input = this.getInput(reqBody.payload.payload, payload.type);
+        this.fromMobile = payload?.sender?.phone;
+        this.userName = payload?.sender?.name
+        this.type = payload?.type;
+        this.input = this.getInput(reqBody?.payload?.payload, payload.type);
     }
 
     getInput(payload, inputType) {
@@ -55,7 +55,7 @@ class InBoundGupshup extends InBound {
             default: 
                 inputObj.text = payload.text;
         }
-        console.log("output: ", inputObj);
+        console.log("InBound converted object: ", inputObj);
         return inputObj;
     }
 }

@@ -1,18 +1,20 @@
 const language = require("../language");
 const userSession = require("../session");
-// const utils = require('./utils');
 const axios = require("axios");
 const botMessage = require('../botMessage');
 const qs = require('qs');
 
-
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
-const BOT_SERVICE_URL = process.env.BOT_SERVICE_URL;
+const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
+const STORY_SAKHI_UTL = process.env.STORY_SAKHI_UTL;
 const BOT_API_TOKEN = process.env.BOT_API_TOKEN;
+const WA_PROVIDER_NUMBER = process.env.WA_PROVIDER_NUMBER;
+const WA_PROVIDER_APPNAME = process.env.WA_PROVIDER_APPNAME;
+
 const audienceMap = {
-  'bot_1': 'any',
-  'bot_2': 'Teacher',
-  'bot_3': 'Parent'
+  'bot_1': null,
+  'bot_2': 'teacher',
+  'bot_3': 'parent'
 };
 /**
  * First message to the user
@@ -20,7 +22,8 @@ const audienceMap = {
  * @param {*} incomingMsg 
  */
 const sendLangSelection = (incomingMsg) => {
-  let langSelecBody = language.getLangSelection();
+  console.log("⭆ sendLangSelection");
+  let langSelecBody = language.getMessage(language.defaultLang, null, 'lang_selection');
   sendMessage(langSelecBody, incomingMsg);
 }
 
@@ -32,7 +35,7 @@ const sendLangSelection = (incomingMsg) => {
  */
 const sendBotSelection = (req, msg) => {
   console.log("⭆ sendBotSelection");
-  let body = botMessage.getBotSelection(userSession.getUserLanguage(req, msg));
+  let body = language.getMessage(userSession.getUserLanguage(req, msg), null, "bot_selection");
   sendMessage(body, msg);
 }
 
@@ -46,7 +49,7 @@ const sendBotWelcomeMsg = (req, msg) => {
   console.log("⭆ sendBotWelcomeMsg");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
-  let body = botMessage.getBotMessage(userLang, userBot, 'Welcome');
+  let body = language.getMessage(userLang, userBot, 'Welcome');
   sendMessage(body, msg);
 }
 
@@ -71,26 +74,35 @@ const sendBotResponse = async (req, msg) => {
  * @param {*} userBot 
  */
 const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
-  let body = botMessage.getBotMessage(userLang, userBot, 'loading_message');
+  let body = language.getMessage(userLang, null, 'loading_message');
   await sendMessage(body, msg);
 }
 
+/**
+ * Send bot response as answer & audio message
+ * @param {*} req 
+ * @param {*} msg 
+ * @param {*} userLang 
+ * @param {*} userBot 
+ */
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
   console.log("⭆ sendBotAnswer");
-  console.log('msgcheck', JSON.stringify(msg))
-  const messageType = msg?.type === 'text' ? 'bot_answer_text' : 'bot_answer_audio';
-  const bodyMessage = botMessage.getBotMessage(userLang, userBot, messageType);
-  console.log('botbody', JSON.stringify(bodyMessage));
+  // console.log('msgcheck', JSON.stringify(msg))
   await fetchQueryRespone(req, msg, userLang, userBot)
-    .then(queryResponse => {
+    .then(async (queryResponse) => {
+      let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
       bodyMessage.message.text = queryResponse?.output?.text;
+      await sendMessage(bodyMessage, msg);
+
+      bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
+      bodyMessage.message.url = queryResponse?.output?.audio;
+      await sendMessage(bodyMessage, msg)
     })
-  sendMessage(bodyMessage, msg);
-  console.log('responsedata', JSON.stringify(bodyMessage))
     .catch(err => {
       console.error('Error in fetchQueryRespone:', err);
     });
 }
+
 /**
  * Footer options for Bot response message
  * "*" to go main menu & "#" to go language selection
@@ -98,17 +110,21 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
-  let body = botMessage.getBotMessage(userLang, userBot, 'footer_message');
+  let body = language.getMessage(userLang, null, 'footer_message');
   await sendMessage(body, msg);
 }
 
-
+/**
+ * Sending message to WhatApp number
+ * @param {*} body 
+ * @param {*} incomingMsg 
+ */
 const sendMessage = async (body, incomingMsg) => {
-  body = setMessageTo(body, incomingMsg);
-  body.message = JSON.stringify(body.message);
-  // console.log('sendmsg1', body);
+  console.log('⭆ sendMessage', body);
+  body = decorateWAMessage(body, incomingMsg);
+
   let data = qs.stringify(body);
-  // console.log('sendmsg', data);
+  
   let config = {
     method: 'post',
     maxBodyLength: Infinity,
@@ -122,25 +138,75 @@ const sendMessage = async (body, incomingMsg) => {
     data: data
   };
 
-  axios.request(config)
+  await axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      // console.log(JSON.stringify(response.data));
     })
     .catch((error) => {
       // console.log(error);
     });
-
 }
 
-const setMessageTo = (body, incomingMsg) => {
 
+/**
+ * For the whatsApp service provider message body
+ * Add the WA details of service provider
+ * @param {Object} body 
+ * @param {Object} incomingMsg 
+ */
+const decorateWAMessage = (body, incomingMsg) => {
+  let payloadFormat = {
+    "channel": "whatsapp",
+    "source": WA_PROVIDER_NUMBER,
+    "src.name": WA_PROVIDER_APPNAME
+  }
+  body.message = JSON.stringify(body.message);
+  Object.assign(body, payloadFormat);
+  let finalPayload = setMessageTo(body, incomingMsg);
+  return finalPayload;
+}
+
+const sendTestMessage = async () => {
+  let data = qs.stringify({
+    'channel': 'whatsapp',
+    'source': '917834811114',
+    'destination': '919964300623',
+    'message': '{\n   "type":"text",\n   "text":"Hello user, how are you?"\n}',
+    'src.name': 'TestDJP' 
+  });
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://api.gupshup.io/wa/api/v1/msg',
+    headers: { 
+      'Cache-Control': 'no-cache', 
+      'Content-Type': 'application/x-www-form-urlencoded', 
+      'apiKey': 'wkwzvw6yducqvbebadi13qnouc88zdbd', 
+      'cache-control': 'no-cache'
+    },
+    data : data
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
+/**
+ * Update the user number to the body (to whome we have to send)
+ * @param {*} body 
+ * @param {*} incomingMsg 
+ * @returns 
+ */
+const setMessageTo = (body, incomingMsg) => {
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
-    console.log("⭆ setMessageTo", JSON.stringify(body.destination));
-
   } else {
     body.destination = incomingMsg?.rawData?.payload?.sender?.phone;
-    console.log("⭆ setMessageTo2", JSON.stringify(body.destination));
   }
 
   return body;
@@ -155,36 +221,49 @@ const setMessageTo = (body, incomingMsg) => {
  */
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   console.log("⭆ fetchQueryRespone");
-  let audienceCheck = audienceMap[userBot] || 'any';
+  
   // console.log('fetchQueryRespone--invmsg', incomingMsg);
   let data = {
     "input": {
-      "language": userLang,
-      "audienceType": audienceCheck
+      "language": userLang
     },
     "output": {
       "format": "audio"
     }
   };
+
+  // Based on Bot selection add the properties
+  let botUrl;
+  if(userBot != 'bot_1') {
+    botUrl = ACTIVITY_SAKHI_URL ;
+    data.input.audienceType = audienceMap[userBot];
+  } else {
+    botUrl = STORY_SAKHI_UTL;
+  }
+
+  // Updating text/audio property to the input request
   if (msg?.type === "text" || msg?.type === "audio") {
     data.input[msg.type] = msg?.input?.[msg.type];
   }
-  console.log('acxoios', data)
+
   var axiosConfig = {
     method: 'POST',
-    url: BOT_SERVICE_URL,
+    url: botUrl,
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': BOT_API_TOKEN
-
+      'Content-Type': 'application/json'
     },
     data: data
   };
-  console.log('acxoios', axiosConfig)
+
+  // Add Authorization token if it is defined
+  if(BOT_API_TOKEN) {
+    axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
+  }
+  console.log('axios', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
-    console.log('Telemetry request successful:', response.data);
+    // console.log('Telemetry request successful:', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
     // console.error('Telemetry request failed:', error);

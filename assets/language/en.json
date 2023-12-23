@@ -1,11 +1,8 @@
 {
     "lang_selection": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "quick_reply",
-            "msgid": "qr1",
+            "msgid": "lang",
             "content": {
                 "type": "text",
                 "header": "Welcome to e-JaadhuPitaraa",
@@ -24,16 +21,12 @@
                     "postbackText": "lang__hi"
                 }
             ]
-        },
-        "src.name": "TestDJP"
+        }
     },
     "bot_selection": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "quick_reply",
-            "msgid": "qr1",
+            "msgid": "bot",
             "content": {
                 "type": "text",
                 "header": "e-JaaduiPitara",
@@ -43,97 +36,68 @@
             "options": [
                 {
                     "type": "text",
-                    "title": "Story Sakhi",
+                    "title": "Story",
                     "postbackText": "bot__bot_1"
                 },
                 {
                     "type": "text",
-                    "title": "Teacher Activities",
+                    "title": "Parent Activities",
                     "postbackText": "bot__bot_2"
                 },
                 {
                     "type": "text",
-                    "title": "Parent Activities",
+                    "title": "Teacher Activities",
                     "postbackText": "bot__bot_3"
                 }
             ]
-        },
-        "src.name": "TestDJP"
+        }
     },
     "bot_1": {
         "Welcome": {
-            "channel": "whatsapp",
-            "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "You can create your own story. What kind of story do you want? For example, I can tell a story about a boy who saw the sea for the first time, or a story about a girl riding a horse"
-            },
-            "src.name": "TestDJP"
+            }
         }
     },
     "bot_2": {
         "Welcome": {
-            "channel": "whatsapp",
-            "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "What kind of activity do you want? For example, I can suggest you how to teach sorting to your children in a class"
-            },
-            "src.name": "TestDJP"
+            }
         }
     },
     "bot_3": {
         "Welcome": {
-            "channel": "whatsapp",
-            "source": "917834811114",
-            "destination": "917892950883",
             "message": {
                 "type": "text",
                 "text": "What kind of activity do you want? For example, I can suggest you how you can engage your child to learn about colors"
-            },
-            "src.name": "TestDJP"
+            }
         }
     },
     "loading_message": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "text",
             "text": "Preparing response! Please wait!!"
-        },
-        "src.name": "TestDJP"
+        }
     },
     "bot_answer_text": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "text",
             "text": " "
-        },
-        "src.name": "TestDJP"
+        }
     },
     "bot_answer_audio": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
-            "type": "Audio",
+            "type": "audio",
             "url": "https://filemanager.gupshup.io/wa/b5d1cf44-dfbb-4ce7-8435-fcf76af13eaa/wa/media/4199c74c-9441-41ab-9ec5-815a23064b8b?download=false"
-        },
-        "src.name": "TestDJP"
+        }
     },
     "footer_message": {
-        "channel": "whatsapp",
-        "source": "917834811114",
-        "destination": "917892950883",
         "message": {
             "type": "text",
             "text": "\n \n Hope you liked it! \n -If you want to go to previous menu enter “*”. \n -If you want to go to main menu enter “#”"
-        },
-        "src.name": "TestDJP"
+        }
     }
 }
