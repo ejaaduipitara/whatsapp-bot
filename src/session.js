@@ -87,12 +87,9 @@ const setUserBot = (req, msg) => {
 } 
 
 const getUserBot = (req, msg) => {
-  return req?.session[sessionBotKey];
+  let userSelectedBotId = req?.session[sessionBotKey];
+  return userSelectedBotId;
 } 
-
-const getAudience = (req) => {
-  return "any";
-}
 
 const getSession = (req, msg) => {
   var userSesKey = 'user'+ (msg?.context?.from || msg?.context?.display_phone_number);

@@ -35,7 +35,7 @@ const webhook = async (req, res) => {
     } 
   
   
-     console.log("IncomingMsg", JSON.stringify(incomingMsg));
+    //  console.log("IncomingMsg", JSON.stringify(incomingMsg));
      if(msg?.type === 'interactive') {
        isLangSelection = session.getUserLanguage(req, msg);
        isBotSelection = session.getUserBot(req, msg);
@@ -43,7 +43,7 @@ const webhook = async (req, res) => {
        Object.assign(msg, {context: incomingMsg[0].changes[0].value.metadata});
      }
   
-    console.log('req session', req.session);
+    console.log('\n req session', req.session);
     console.log("languageSelection: ", isLangSelection, ' userSelection: ', isBotSelection);
     WHATSAPP_TO = msg?.from ;
     if (((!isLangSelection && !isBotSelection && (msg?.type === 'text')) || msg?.text?.body == '#')) {

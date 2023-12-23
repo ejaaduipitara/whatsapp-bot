@@ -1,21 +1,11 @@
 const express = require("express");
 const axios = require("axios");
-const fs = require('fs');
-const language = require("../language");
 const userSession = require("../session");
-// const utils = require('./utils');
 const messages = require('./messages');
 const inBoundGP = require('./InBound');
-const botFile = fs.readFileSync('assets/bots.json', 'utf-8');
 // const telemetryService = require('../telemetryService');
-// const footerFile = fs.readFileSync('assets/footer.json', 'utf-8');
 
-const NETCORE_TOKEN = process.env.WA_PROVIDER_TOKEN;
-
-// Read JSON file
-const bots = JSON.parse(botFile);
-// const footer = JSON.parse(footerFile);
-
+let counter = 0;
 var isLangSelected, isBotSelected;
 // let telemetry = new telemetryService();
 
@@ -56,27 +46,12 @@ const webhook = async (req, res) => {
         res.sendStatus(200);
     } else {
         // existing user & converstaion is happening
-        console.log('User query')
+        counter++;
+        console.log('User query'+ counter);
         await messages.sendBotResponse(req, msg);
-        
-        //Bot response
-        // let botResponse = await util.getBotMessage(msg, userSelection);
-        // let ansStr = botResponse?.answer.substri,ng(0, 800);
-
-        // let body = {
-        //     "messaging_product": "whatsapp",
-        //     "to": WHATSAPP_TO,
-        //     "text": {
-        //         "body": ansStr,
-        //     }
-        // }
-        // await sendMessage(req, res, body);
-
-        res.sendStatus(200);
+        // res.sendStatus(200);
     }
     // telemetry.logEvent(req, msg);
-
-    
 }
 
 const getBotMessage = async (msg, userSelection) => {
