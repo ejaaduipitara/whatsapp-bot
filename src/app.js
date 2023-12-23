@@ -1,29 +1,32 @@
 "use strict";
-const token = process.env.WHATSAPP_TOKEN;
-
-// Imports dependencies and set up http server
-require('dotenv').config()
 const express = require("express");
+require('dotenv').config();
 const body_parser = require("body-parser");
 const session = require('./session');  // Import session module
-const service = require("./service")
-const netcore = require("./netcore")
-const language = require("./language")
-
-const app = express() // creates express http server
+const language = require("./language");
+// const netcoreRoutes = require("./netcore/routes");
+const gupshupRoutes = require("./gupshup/routes");
+const app = express(); // creates express http server
 
 app.use(body_parser.json());
-app.use(session);
-
+app.use(session.init());
 language.init();
 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log("webhook is listening port:",process.env.PORT || 1337));
+let port = process.env.PORT || 3020;
+app.listen(port, () => console.log("webhook is listening port:", port));
 
-app.post("/webhook", service.webhook)
+// Used for Netcore whatsapp integration
+// app.use("/netcore", netcoreRoutes);
 
-app.post("/testMessage", service.testMessage);
+// Used for Gupsgup whatsapp integration
+app.use("/gupshup", gupshupRoutes);
 
-app.post("/netcore/webhook", netcore.webhook);
+// For Health check
+app.get("/health", (req, res) => {
+  res.send("Bot is running");
+});
 
-module.exports = { app }
+app.get("/", function (req, res) {
+  res.redirect("/health");
+});

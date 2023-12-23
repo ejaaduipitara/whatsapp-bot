@@ -1,95 +1,103 @@
 {
-    "bot_1": {
-        "hi": "You can create your own story. What kind of story do you want? For example, I can tell a story about a boy who saw the sea for the first time, or a story about a girl riding a horse"
-    },
-    "bot_2": {
-        "hi": "What kind of activity do you want? For example, I can suggest you how to teach sorting to your children in a class"
-    },
-    "bot_3": {
-        "hi": "What kind of activity do you want? For example, I can suggest you how you can engage your child to learn about colors"
+    "lang_selection": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "lang",
+            "content": {
+                "type": "text",
+                "header": "Welcome to e-JaadhuPitaraa",
+                "text": "Namaste 🙏  \n\nSelect language",
+                "caption": "Please select below language option to proceed"
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "title": "English",
+                    "postbackText": "lang__en"
+                },
+                {
+                    "type": "text",
+                    "title": "हिंदी",
+                    "postbackText": "lang__hi"
+                }
+            ]
+        }
     },
     "bot_selection": {
-        "messaging_product": "whatsapp",
-        "type": "interactive",
-        "interactive": {
-            "type": "button",
-            "header": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "bot",
+            "content": {
                 "type": "text",
-                "text": "e-JaaduiPitara"
+                "header": "e-JaaduiPitara",
+                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n What do you want? ",
+                "caption": "Please select below option to proceed"
             },
-            "body": {
-                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n What do you want? "
-            },
-            "action": {
-                "buttons": [
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "bot_1",
-                            "title": "A Story"
-                        }
-                    },
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "bot_2",
-                            "title": "Teacher Activities"
-                        }
-                    },
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "bot_3",
-                            "title": "Parent Activities"
-                        }
-                    }
-                ]
+            "options": [
+                {
+                    "type": "text",
+                    "title": "Story",
+                    "postbackText": "bot__bot_1"
+                },
+                {
+                    "type": "text",
+                    "title": "Parent Activities",
+                    "postbackText": "bot__bot_2"
+                },
+                {
+                    "type": "text",
+                    "title": "Teacher Activities",
+                    "postbackText": "bot__bot_3"
+                }
+            ]
+        }
+    },
+    "bot_1": {
+        "Welcome": {
+            "message": {
+                "type": "text",
+                "text": "You can create your own story. What kind of story do you want? For example, I can tell a story about a boy who saw the sea for the first time, or a story about a girl riding a horse"
             }
         }
     },
-    "lang_selection": {
-        "messaging_product": "whatsapp",
-        "type": "interactive",
-        "interactive": {
-            "type": "button",
-            "header": {
+    "bot_2": {
+        "Welcome": {
+            "message": {
                 "type": "text",
-                "text": "Welcome to e-JaaduiPitaraa"
-            },
-            "body": {
-                "text": "Namaste 🙏 \n\nSelect Language"
-            },
-            "action": {
-                "buttons": [
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "lan_en",
-                            "title": "English"
-                        }
-                    },
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "lan_hi",
-                            "title": "Hindi"
-                        }
-                    },
-                    {
-                        "type": "reply",
-                        "reply": {
-                            "id": "lan_ka",
-                            "title": "Kannada"
-                        }
-                    }
-                ]
+                "text": "What kind of activity do you want? For example, I can suggest you how to teach sorting to your children in a class"
             }
+        }
+    },
+    "bot_3": {
+        "Welcome": {
+            "message": {
+                "type": "text",
+                "text": "What kind of activity do you want? For example, I can suggest you how you can engage your child to learn about colors"
+            }
+        }
+    },
+    "loading_message": {
+        "message": {
+            "type": "text",
+            "text": "Preparing response! Please wait!!"
+        }
+    },
+    "bot_answer_text": {
+        "message": {
+            "type": "text",
+            "text": " "
+        }
+    },
+    "bot_answer_audio": {
+        "message": {
+            "type": "audio",
+            "url": "https://filemanager.gupshup.io/wa/b5d1cf44-dfbb-4ce7-8435-fcf76af13eaa/wa/media/4199c74c-9441-41ab-9ec5-815a23064b8b?download=false"
         }
     },
     "footer_message": {
-        "messaging_product": "whatsapp",
-        "text": {
-            "body": "\n \n Hope you liked it! \n -If you want to go to previous menu enter “*”. \n -If you want to go to main menu enter “#”"
+        "message": {
+            "type": "text",
+            "text": "\n \n Hope you liked it! \n -If you want to go to previous menu enter “*”. \n -If you want to go to main menu enter “#”"
         }
     }
 }
