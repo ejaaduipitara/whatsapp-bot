@@ -12,13 +12,15 @@ var isLangSelected, isBotSelected;
 const webhook = async (req, res) => {
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
     let msg = incomingMsg;
-    // console.log("IncomingMsg", JSON.stringify(msg));
+    
     
     if(!msg){
         console.log("XXX no message", msg);
         res.sendStatus(402);
         return;
+
     } 
+    console.log("Webhook - RawData: ", msg.rawData);
     // telemetry Initializing
     // telemetry.initEvent();
     let isSessionExist = userSession.createSession(req, msg);
@@ -29,12 +31,12 @@ const webhook = async (req, res) => {
     console.log(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
 
-    if (!isSessionExist || msg?.type == '#') {
+    if (!isSessionExist || msg?.text === '#') {
         console.log("👨 First time user");
         // telemetry.startEvent(req, msg);
         messages.sendLangSelection(msg);
         res.sendStatus(200);
-    } else if (!isLangSelected || msg?.type == '*') {
+    } else if (!isLangSelected || msg?.text === '*') {
         console.log("📚 Language selected");
         userSession.setUserLanguage(req, msg);
         messages.sendBotSelection(req, msg);
@@ -52,34 +54,6 @@ const webhook = async (req, res) => {
         // res.sendStatus(200);
     }
     // telemetry.logEvent(req, msg);
-}
-
-const getBotMessage = async (msg, userSelection) => {
-    if (msg) {
-        let userQuery = msg.text && msg.text.body ? msg.text.body : "Hi";
-        let botUrl = bots[userSelection] + userQuery
-
-        console.log('botURL', botUrl)
-        try {
-            const { data, status } = await axios({
-                "method": "get",
-                "url": botUrl
-            })
-            console.log("getBotMessage => Bot", botUrl, " respond sucessfully");
-            return data;
-        } catch (error) {
-            if (error.response) {
-                // The request was made, but the server responded with a status code other than 2xx
-                console.error('Server Error:', error.response.status, error.response.data);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error('No response from server:', error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error during request setup:', error.message);
-            }
-        }
-    }
 }
 
 // For Health check

@@ -3,12 +3,12 @@ const router = express.Router();
 const service = require("./service");
 
 router.post('/webhook', (req, res) => {
-    console.log("Gupshup: ", req.body);
-    if(req.body.payload.type == "sandbox-start"){
-      res.sendStatus(200);
+    if(req.body.type === "message"){
+        console.log("Gupshup/webhook: ", JSON.stringify(req.body));
+        service.webhook(req, res);
     } else {
       // res.redirect("gupshup/webhook");
-      service.webhook(req, res);
+      res.sendStatus(200);
     }
   });
   

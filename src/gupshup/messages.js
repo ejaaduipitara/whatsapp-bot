@@ -215,6 +215,7 @@ const sendTestMessage = async () => {
  * @returns 
  */
 const setMessageTo = (body, incomingMsg) => {
+  console.log('⭆ sendMessage', incomingMsg);
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
   } else {
