@@ -6,9 +6,11 @@ const session = require('./session');  // Import session module
 const language = require("./language");
 // const netcoreRoutes = require("./netcore/routes");
 const gupshupRoutes = require("./gupshup/routes");
+const cookieParser = require("cookie-parser");
 const app = express(); // creates express http server
 
 app.use(body_parser.json());
+app.use(cookieParser());
 app.use(session.init());
 language.init();
 

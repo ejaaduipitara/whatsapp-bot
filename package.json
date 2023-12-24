@@ -21,8 +21,8 @@
     "@project-sunbird/telemetry-sdk": "0.0.29",
     "dateformat": "2.0.0",
     "uuid": "3.1.0",
-    "lodash": "4.17.15"
-
+    "lodash": "4.17.15",
+    "cookie-parser":"1.4.6"
 
 
   },
