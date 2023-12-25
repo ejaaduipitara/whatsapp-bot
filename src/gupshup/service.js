@@ -31,12 +31,13 @@ const webhook = async (req, res) => {
     console.log(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
 
-    if (!isSessionExist || msg?.text === '#') {
+    if (!isSessionExist || msg?.input?.text === '#') {
+        userSession.clearSession(req);
         console.log("👨 First time user");
         // telemetry.startEvent(req, msg);
         messages.sendLangSelection(msg);
         res.sendStatus(200);
-    } else if (!isLangSelected || msg?.text === '*') {
+    } else if (!isLangSelected || msg?.input?.text === '*') {
         console.log("📚 Language selected");
         userSession.setUserLanguage(req, msg);
         messages.sendBotSelection(req, msg);
@@ -51,7 +52,7 @@ const webhook = async (req, res) => {
         counter++;
         console.log('User query'+ counter);
         await messages.sendBotResponse(req, msg);
-        // res.sendStatus(200);
+        res.sendStatus(200);
     }
     // telemetry.logEvent(req, msg);
 }
