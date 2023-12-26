@@ -10,7 +10,7 @@ const sessionStore = new pgSession({
 const inMemoryStore = {};
 const sessionLangKey = "lang";
 const sessionBotKey = "bot";
-var isLangSelection, isBotSelection;
+const sessionlatestMsgTimestamp = "msgTimestamp";
 var deafultSession = {};
 
 var sampleMobile = "910000000000";
@@ -57,14 +57,22 @@ const getUserSessionId = (incomingMsg) => {
 
 const createSession = (req, incomingMsg) => {
   // inMemoryStore[id]
+  console.log("req session:", req.session);
   let sessionId = req?.session?.sessionId || deafultSession.sessionId;
   if(!sessionId) {
     sessionId = getUserSessionId(incomingMsg);
+    // TODO: temporary solution
     deafultSession.sessionId = sessionId;
+    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    
     req.session.sessionId = sessionId;
+    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    
     console.log("✅ new session created: ", sessionId);
     return false;
   } else {
+    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     console.log("✓ session already exist: ", sessionId);
     return true;
   }
@@ -133,9 +141,19 @@ const clearSession = (req) => {
   deafultSession[sessionBotKey] = clearBot;
 }
 
+const clearSessionBot = (req) => {
+  let clearBot = undefined;
+  if(req?.session) req.session[sessionBotKey] = clearBot;
+  deafultSession[sessionBotKey] = clearBot;
+}
 const getSession = (req, msg) => {
   var userSesKey = 'user'+ (msg?.context?.from || msg?.context?.display_phone_number);
   return req.session;
 }
 
-module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession, clearSession }
+const getLatestMessageTimestamp = (req, res) => {
+  console.log("Session ts:",deafultSession[sessionlatestMsgTimestamp]);
+  return deafultSession[sessionlatestMsgTimestamp];
+}
+
+module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession, clearSession, clearSessionBot, getLatestMessageTimestamp }

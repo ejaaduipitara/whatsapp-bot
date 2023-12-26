@@ -30,5 +30,7 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/", function (req, res) {
+  // const ipAddress = req.socket.remoteAddress;
+  // console.log("ipAddress: ", ipAddress);
   res.redirect("/health");
 });

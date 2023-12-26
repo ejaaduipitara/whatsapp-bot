@@ -1,6 +1,7 @@
-CREATE DATABASE ejpWA;
+CREATE DATABASE jaadhuiPitara;
+\c jaadhuiPitara;
 
-CREATE TABLE "session" (
+CREATE TABLE IF NOT EXISTS "session" (
   "sid" varchar NOT NULL COLLATE "default",
   "sess" json NOT NULL,
   "expire" timestamp(6) NOT NULL
