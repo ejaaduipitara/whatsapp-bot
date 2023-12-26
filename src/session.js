@@ -1,10 +1,20 @@
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
+
+const POSTGRES_URL = process.env.POSTGRES_URL;
+const sessionStore = new pgSession({
+  tableName : 'session',
+  conString: POSTGRES_URL,
+});
 
 const inMemoryStore = {};
 const sessionLangKey = "lang";
 const sessionBotKey = "bot";
-var isLangSelection, isBotSelection;
+const sessionlatestMsgTimestamp = "msgTimestamp";
 var deafultSession = {};
+
+var sampleMobile = "910000000000";
+var sampleUserName= "ejpu";// ejp user
 
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -13,6 +23,7 @@ const init = () => {
     secret: "ABEGkZlkMAYjAgs-sJSPdqSRIMDoHg",
     saveUninitialized: true,
     resave: true,
+    store: sessionStore,
     cookie: { maxAge: oneDay }
 })
   
@@ -25,19 +36,43 @@ const init = () => {
  * @returns 
  */
 const getUserSessionId = (incomingMsg) => {
-  return "user0623"
+    let shortUserName, shortRandMobile;
+   
+    try {
+      console.log(incomingMsg.userName, incomingMsg.fromMobile);
+      shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4)
+      let randMobile = (Number(incomingMsg.fromMobile)*2014).toString(); 
+      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+      // shortRandMobile = (Number(incomingMsg.fromMobile)*2014).toString().substring(0,4)
+      return shortUserName+shortRandMobile;
+    } catch (err) {
+      console.log(`Generating default: `)
+      shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4)
+      let randMobile = (Number(sampleMobile)*2014).toString(); 
+      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+      // shortRandMobile = (Number(sampleMobile)*2014).toString().substring(0,4)
+      return shortUserName+shortRandMobile;
+    }
 }
 
 const createSession = (req, incomingMsg) => {
   // inMemoryStore[id]
+  console.log("req session:", req.session);
   let sessionId = req?.session?.sessionId || deafultSession.sessionId;
   if(!sessionId) {
     sessionId = getUserSessionId(incomingMsg);
+    // TODO: temporary solution
     deafultSession.sessionId = sessionId;
+    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    
     req.session.sessionId = sessionId;
+    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    
     console.log("✅ new session created: ", sessionId);
     return false;
   } else {
+    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     console.log("✓ session already exist: ", sessionId);
     return true;
   }
@@ -54,7 +89,7 @@ const setUserLanguage = (req, msg) => {
     if (selLang) {
         // If not present, set the default value from the incoming message
         req.session[sessionLangKey] = selLang;
-      deafultSession[sessionLangKey] = selLang
+        deafultSession[sessionLangKey] = selLang;
         console.log(`✅ Language set ${selLang}, req session`);
     } else {
         console.log('✓ User selected lang: ', req.session[sessionLangKey]);
@@ -92,9 +127,33 @@ const getUserBot = (req, msg) => {
   return userSelectedBotId;
 } 
 
+/**
+ * Clear session object
+ * @param {*} req 
+ */
+const clearSession = (req) => {
+  let clearLang = undefined;
+  if(req?.session) req.session[sessionLangKey] = clearLang;
+  deafultSession[sessionLangKey] = clearLang;
+
+  let clearBot = undefined;
+  if(req?.session) req.session[sessionBotKey] = clearBot;
+  deafultSession[sessionBotKey] = clearBot;
+}
+
+const clearSessionBot = (req) => {
+  let clearBot = undefined;
+  if(req?.session) req.session[sessionBotKey] = clearBot;
+  deafultSession[sessionBotKey] = clearBot;
+}
 const getSession = (req, msg) => {
   var userSesKey = 'user'+ (msg?.context?.from || msg?.context?.display_phone_number);
   return req.session;
 }
 
-module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession }
+const getLatestMessageTimestamp = (req, res) => {
+  console.log("Session ts:",deafultSession[sessionlatestMsgTimestamp]);
+  return deafultSession[sessionlatestMsgTimestamp];
+}
+
+module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession, clearSession, clearSessionBot, getLatestMessageTimestamp }
