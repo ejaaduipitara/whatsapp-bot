@@ -41,11 +41,11 @@ const init = () => {
 const query = async (queryObj) => {
   try{
     const res = await client.query(queryObj);
-    // logger.info("Query resp:", res);
+    // logger.debug("Query resp:", res);
     await client.end();
     return res?.rows[0];
   } catch (err) {
-    logger.info("Query resp:", err);
+    logger.error("Query resp:", err);
     await client.end();
   }
 }
@@ -57,13 +57,13 @@ const updateUid = async (req, uid) => {
     text: updateQuery,
     values: [uid]
   }
-  // logger.info("updateUid", queryObj);
+  // logger.debug("updateUid", queryObj);
   try{
     const res = await client.query(queryObj);
     await client.end();
     return res?.rows[0];
   } catch (err) {
-    logger.info("Query resp:", err);
+    logger.error("Query resp:", err);
     await client.end();
   }
 }

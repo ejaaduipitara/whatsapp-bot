@@ -205,7 +205,7 @@ const sendTestMessage = async () => {
     logger.info(JSON.stringify(response.data));
   })
   .catch((error) => {
-    logger.info(error);
+    logger.error(error);
   });
 }
 
@@ -234,8 +234,8 @@ const setMessageTo = (body, incomingMsg) => {
  * @returns {Promise<Object>} - A promise resolving to the response data.
  */
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
-  logger.info("⭆ fetchQueryRespone");
-  logger.info(msg);
+  logger.debug("⭆ fetchQueryRespone");
+  logger.debug(msg);
   let data = {
     input: {
       "language": userLang
@@ -272,14 +272,14 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  logger.info('axios', axiosConfig);
+  logger.debug('axios', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
     // logger.info('Telemetry request successful:', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
-    // console.error('Telemetry request failed:', error);
+    console.error('fetch response from bot failed:', error);
     throw error; // Throw an error to handle it wherever the function is called
   }
 };

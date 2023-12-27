@@ -6,7 +6,7 @@ const sessionLangKey = "lang";
 const sessionBotKey = "bot";
 const sessionlatestMsgTimestamp = "msgTimestamp";
 var deafultSession = {};
-
+const mobileMult = 2013;
 var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
 
@@ -25,17 +25,15 @@ const getUserSessionId = (incomingMsg) => {
    
     try {
       logger.debug(incomingMsg.userName, incomingMsg.fromMobile);
-      shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4)
-      let randMobile = (Number(incomingMsg.fromMobile)*2014).toString(); 
+      shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
+      let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
       shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-      // shortRandMobile = (Number(incomingMsg.fromMobile)*2014).toString().substring(0,4)
       return shortUserName+shortRandMobile;
     } catch (err) {
-      logger.info(`Generating default: `)
-      shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4)
-      let randMobile = (Number(sampleMobile)*2014).toString(); 
+      logger.warn(`Generating default userId: `);
+      shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
+      let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
       shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-      // shortRandMobile = (Number(sampleMobile)*2014).toString().substring(0,4)
       return shortUserName+shortRandMobile;
     }
 }
@@ -59,7 +57,6 @@ const createSession = async (req, incomingMsg) => {
     // logger.debug("User Session", userSess);
     return false;
   } else {
-    // logger.info("req session:", req);
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     let getSessionQuery = {
@@ -75,7 +72,7 @@ const createSession = async (req, incomingMsg) => {
 }
 
 const setUserLanguage = (req, msg) => {
-    logger.info("⭆ setUserLanguage");
+    logger.debug("⭆ setUserLanguage");
     
     let userReplyBtnId = msg?.input?.context?.id;
     logger.info("userReplyBtnId: ",userReplyBtnId, "btn_reply: ", msg?.input);
