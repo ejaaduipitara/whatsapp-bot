@@ -22,25 +22,26 @@ Before you begin, ensure you have the following installed:
 
 ## Getting Started
 
-1. Clone the repository:
+### 1. Clone the repository:
 
    ```bash
    git clone https://github.com/DJP-Digital-Jaaduii-Pitara/whatsapp-bot.git
    cd whatsapp-bot
    ```
 
-2. Install dependencies:
+### 2. Install dependencies:
 
    ```
    npm install / yarn  install
    ```
 
-### configuration
+### 3. configuration
 
 Update the `.env `file with the respective keys and values
     
   PORT: 3010  
   CHAR_LIMIT: 1024  
+  LOG_LEVEL: INFO  
 
   // Bot specific properties
   ACTIVITY_SAKHI_URL: "xxxx"  # Activity sakhi bot url for parent & teacher  
@@ -66,7 +67,10 @@ Update the `.env `file with the respective keys and values
   REDIS_PORT: "6379"  
   REDIS_INDEX: "0" 
 
-4. Start the application:
+#### Note:
+Postgres is SSL enabled, then avoid ssl check you can set `?sslmode=no-verify` to the POSTGRES_URL .env property  ([ref](https://github.com/brianc/node-postgres/issues/2281))
+
+### 4. Start the application:
 
    ```
    npm run start
