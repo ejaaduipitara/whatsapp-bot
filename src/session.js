@@ -1,12 +1,21 @@
-const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
+// const session = require('express-session');
+// const pgSession = require('connect-pg-simple')(session);
+// const Pool = require('pg');
+ 
+// const pool = new Pool({
+//   host: 'localhost',
+//   user: 'postgres',
+//   max: 20,
+//   idleTimeoutMillis: 30000,
+//   connectionTimeoutMillis: 2000,
+// })
 
-const POSTGRES_URL = process.env.POSTGRES_URL;
-const sessionStore = new pgSession({
-  tableName : 'session',
-  conString: POSTGRES_URL,
-});
-
+// const POSTGRES_URL = process.env.POSTGRES_URL;
+// const sessionStore = new pgSession({
+//   tableName : 'session',
+//   conString: POSTGRES_URL,
+// });
+const database = require("./database");
 const inMemoryStore = {};
 const sessionLangKey = "lang";
 const sessionBotKey = "bot";
@@ -16,18 +25,9 @@ var deafultSession = {};
 var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
 
-const oneDay = 1000 * 60 * 60 * 24;
-
 const init = () => {
-  return session({
-    secret: "ABEGkZlkMAYjAgs-sJSPdqSRIMDoHg",
-    saveUninitialized: true,
-    resave: true,
-    store: sessionStore,
-    cookie: { maxAge: oneDay }
-})
-  
   console.log("Session init called.");
+  return database.init();
 }
 
 /**
@@ -55,10 +55,11 @@ const getUserSessionId = (incomingMsg) => {
     }
 }
 
-const createSession = (req, incomingMsg) => {
+const createSession = async (req, incomingMsg) => {
   // inMemoryStore[id]
-  console.log("req session:", req.session);
+  // console.log("req session:", req.session);
   let sessionId = req?.session?.sessionId || deafultSession.sessionId;
+
   if(!sessionId) {
     sessionId = getUserSessionId(incomingMsg);
     // TODO: temporary solution
@@ -67,13 +68,23 @@ const createSession = (req, incomingMsg) => {
     
     req.session.sessionId = sessionId;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    
-    console.log("✅ new session created: ", sessionId);
+    // console.log("req session:", req);
+    console.log("✅ new session created: ", sessionId, ", sessionID:", req.sessionID);
+    let userSess = await database.updateUid(req, sessionId);
+    // console.log("User Session", userSess);
     return false;
   } else {
+    // console.log("req session:", req);
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    console.log("✓ session already exist: ", sessionId);
+    let getSessionQuery = {
+      text: 'SELECT * from session WHERE uid = $1',
+      values: [sessionId]
+    }
+    let userSess = await database.query(getSessionQuery);
+  
+    console.log("User Session", userSess);
+    console.log("✓ session already exist: ", sessionId, ", sessionID:", req.sessionID);
     return true;
   }
 }
@@ -146,8 +157,13 @@ const clearSessionBot = (req) => {
   if(req?.session) req.session[sessionBotKey] = clearBot;
   deafultSession[sessionBotKey] = clearBot;
 }
+
 const getSession = (req, msg) => {
-  var userSesKey = 'user'+ (msg?.context?.from || msg?.context?.display_phone_number);
+  var userSesKey = 'user'+ (msg?.fromMobile);
+  const query = {
+    // give the query a unique name\
+    text: 'SELECT * FROM session',
+  }
   return req.session;
 }
 

@@ -122,7 +122,7 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  */
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
-  console.log('⭆ sendMessage', body);
+  // console.log('⭆ sendMessage', body);
   body = decorateWAMessage(body, incomingMsg);
 
   let data = qs.stringify(body);
