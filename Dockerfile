@@ -1,4 +1,4 @@
-FROM node:19-alpine
+FROM node:16-alpine
 RUN mkdir -p /app
 ENV BOT_SERVICE_URL=$BOT_SERVICE_URL \
     BOT_API_TOKEN=$BOT_API_TOKEN \
@@ -20,5 +20,5 @@ WORKDIR /app
 COPY package.json .
 RUN npm install
 COPY . .
-EXPOSE 3000
+EXPOSE 3010
 CMD [ "npm" , "start"]
