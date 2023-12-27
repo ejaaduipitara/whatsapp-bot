@@ -7,10 +7,10 @@ const userSession = require("../session");
 
 const isFirstTimeUser = (req,incomingMsg) => {
     if(!userSession?.getUserLanguage(req,incomingMsg)) {
-        logger.log("❌ isFirstTimeUser");
+        logger.info("❌ isFirstTimeUser");
         return false;
     } else {
-        logger.log("✅ isFirstTimeUser");
+        logger.info("✅ isFirstTimeUser");
         return true;
     }
 }

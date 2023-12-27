@@ -71,7 +71,19 @@ Update the `.env `file with the respective keys and values
 Postgres is SSL enabled, then avoid ssl check you can set `?sslmode=no-verify` to the POSTGRES_URL .env property  ([ref](https://github.com/brianc/node-postgres/issues/2281))
 
 ### 4. Start the application:
-
    ```
    npm run start
    ```
+*Note:*    
+To test the application, type below url in browser  
+`localhost:3010/health` 
+output : "bot is runnig"  
+
+### [API Collection](./docs/api.md)
+   [Postman collection for testing](./docs/postman/eDP-WhatsApp-Bot.postman_collection.json)
+
+
+### Build Docker image  
+- To build Docker image `docker build .`  
+- To check the latest Docker image built `docker image ls`  
+- Tag the docker image `docker tag {IMAGE ID} whatsapp:latest`  
