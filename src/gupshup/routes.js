@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const service = require("./service");
+const { logger } = require('../logger');
+
 
 router.post('/webhook', (req, res) => {
     if(req.body.type === "message"){
-        console.log("Gupshup/webhook: ", JSON.stringify(req.body));
+        logger.debug("Gupshup/webhook: ", JSON.stringify(req.body));
         service.webhook(req, res);
     } else {
       // res.redirect("gupshup/webhook");

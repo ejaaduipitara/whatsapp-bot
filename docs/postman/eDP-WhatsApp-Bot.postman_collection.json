@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "acd1357b-6dfe-404a-8952-2afd4448d5ca",
+		"name": "eDP-WhatsApp-Bot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31915230",
+		"_collection_link": "https://djp-dec-2023.postman.co/workspace/Team-Workspace~f3481dc6-da74-4e6d-82f2-e2a15f388fc6/collection/31915230-acd1357b-6dfe-404a-8952-2afd4448d5ca?action=share&source=collection_link&creator=31915230"
+	},
+	"item": [
+		{
+			"name": "webhook - Gupshup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Hi\" \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/gupshup/webhook",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"gupshup",
+						"webhook"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"hi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/gupshup/webhook",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"gupshup",
+								"webhook"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2-nOO9QiTIwXgNtWtBJezz8kv3SLc\""
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "connect.sid=s%3AWwN7a5c1v1vwC7twQojBuT0CQpVYS4k8.M7QpN0zDoWvWQo0ZzDKhRjmpbvHlmSXc6NYYFrel6GA; Path=/; Expires=Thu, 28 Dec 2023 12:20:33 GMT; HttpOnly"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Dec 2023 12:20:33 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "OK"
+				}
+			]
+		},
+		{
+			"name": "helath",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/health",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/health",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "14"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e-U0huMUD1Fc6l+H8Au/oDxdIgVKQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Dec 2023 12:21:10 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "Bot is running"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "localhost:3010",
+			"type": "string"
+		}
+	]
+}

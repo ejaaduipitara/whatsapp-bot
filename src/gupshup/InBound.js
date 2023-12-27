@@ -4,6 +4,8 @@
 //     fromMobile: Number
 // }
 
+const { logger } = require("../logger");
+
 var InBountInput = {
     context: undefined,
     text: undefined,
@@ -38,8 +40,8 @@ class InBoundGupshup extends InBound {
 
     getInput(payload, inputType) {
         // for both text & button_reply(interactive)
-        // console.log(this, payload);
-        let inputObj = this.input;
+        // logger.info(this, payload);
+        let inputObj = JSON.parse(JSON.stringify(this.input));
         switch(inputType) {
             case "text":
                 inputObj.text = payload.text;
@@ -55,7 +57,7 @@ class InBoundGupshup extends InBound {
             default: 
                 inputObj.text = payload.text;
         }
-        console.log("InBound converted object: ", inputObj);
+        logger.info("InBound converted object: ", inputObj);
         return inputObj;
     }
 }

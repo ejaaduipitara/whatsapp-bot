@@ -22,25 +22,26 @@ Before you begin, ensure you have the following installed:
 
 ## Getting Started
 
-1. Clone the repository:
+### 1. Clone the repository:
 
    ```bash
    git clone https://github.com/DJP-Digital-Jaaduii-Pitara/whatsapp-bot.git
    cd whatsapp-bot
    ```
 
-2. Install dependencies:
+### 2. Install dependencies:
 
    ```
    npm install / yarn  install
    ```
 
-### configuration
+### 3. configuration
 
 Update the `.env `file with the respective keys and values
     
   PORT: 3010  
   CHAR_LIMIT: 1024  
+  LOG_LEVEL: INFO  
 
   // Bot specific properties
   ACTIVITY_SAKHI_URL: "xxxx"  # Activity sakhi bot url for parent & teacher  
@@ -66,8 +67,23 @@ Update the `.env `file with the respective keys and values
   REDIS_PORT: "6379"  
   REDIS_INDEX: "0" 
 
-4. Start the application:
+#### Note:
+Postgres is SSL enabled, then avoid ssl check you can set `?sslmode=no-verify` to the POSTGRES_URL .env property  ([ref](https://github.com/brianc/node-postgres/issues/2281))
 
+### 4. Start the application:
    ```
    npm run start
    ```
+*Note:*    
+To test the application, type below url in browser  
+`localhost:3010/health` 
+output : "bot is runnig"  
+
+### [API Collection](./docs/api.md)
+   [Postman collection for testing](./docs/postman/eDP-WhatsApp-Bot.postman_collection.json)
+
+
+### Build Docker image  
+- To build Docker image `docker build .`  
+- To check the latest Docker image built `docker image ls`  
+- Tag the docker image `docker tag {IMAGE ID} whatsapp:latest`  

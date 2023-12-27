@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS "session" (
 WITH (OIDS=FALSE);
 
 ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
-
+-- ALTER TABLE "session" ADD COLUMN "uid" varchar NULL DEFAULT 'NULL';
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
 CREATE INDEX idx_user_id ON "session" ("uid");

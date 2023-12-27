@@ -1,6 +1,7 @@
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const { Client } = require('pg');
+const { logger } = require('./logger');
 const POSTGRES_URL = process.env.POSTGRES_URL;
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -14,13 +15,13 @@ const dbStore = new pgSession({
 });
 
 const init = () => {
-  console.log("Database init!");
+  logger.info("Database init!");
   client.connect((err) => { 
     //Connected Database
     if (err) {
-      console.log(err);
+      logger.info(err);
     } else {
-      console.log("Data logging initiated!");
+      logger.info("Data logging initiated!");
     }
   });
 
@@ -40,11 +41,11 @@ const init = () => {
 const query = async (queryObj) => {
   try{
     const res = await client.query(queryObj);
-    // console.log("Query resp:", res);
+    // logger.info("Query resp:", res);
     await client.end();
     return res?.rows[0];
   } catch (err) {
-    console.log("Query resp:", err);
+    logger.info("Query resp:", err);
     await client.end();
   }
 }
@@ -56,13 +57,13 @@ const updateUid = async (req, uid) => {
     text: updateQuery,
     values: [uid]
   }
-  // console.log("updateUid", queryObj);
+  // logger.info("updateUid", queryObj);
   try{
     const res = await client.query(queryObj);
     await client.end();
     return res?.rows[0];
   } catch (err) {
-    console.log("Query resp:", err);
+    logger.info("Query resp:", err);
     await client.end();
   }
 }

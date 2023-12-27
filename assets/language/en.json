@@ -30,7 +30,7 @@
             "content": {
                 "type": "text",
                 "header": "e-Jaadui Pitara",
-                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n Please select Story Sakhi for creating your own story \n Please select Parent Sakhi for getting suggestions of activities that you can engage with your children at home \n Please select Teacher Sakhi for getting suggestions of activities that you can engage with your children at schoo ",
+                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n- Please select Story Sakhi for creating your own story \n- Please select Parent Sakhi for getting suggestions of activities that you can engage with your children at home \n- Please select Teacher Sakhi for getting suggestions of activities that you can engage with your children at schoo ",
                 "caption": "Please select below option to proceed"
             },
             "options": [
@@ -56,7 +56,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Story Sakhi! \n I can create a story for you about what you ask for. \n For example: \n I can tell a story about a girl who saw the sea for the first time. \n I can tell a story about a Monkey and a Frog \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Story Sakhi! \n I can create a story for you about what you ask for. \n\n For example: \n- I can tell a story about a girl who saw the sea for the first time. \n- I can tell a story about a Monkey and a Frog \n\n Ask me about anything that you want. You can type or speak."
             }
         }
     },
@@ -64,7 +64,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Parent Sakhi! \n I can suggest you activities that you can do with your children at home. Here are few examples of what you can ask: \n Examples: \n What activity can I do with my child using vegetables in your kitchen \n Suggest how I can make my child interested in household activities \n My child does not eat nutritious food, what to do \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Parent Sakhi! \n I can suggest you activities that you can do with your children at home. Here are few examples of what you can ask: \n\n Examples: \n- What activity can I do with my child using vegetables in your kitchen \n- Suggest how I can make my child interested in household activities \n- My child does not eat nutritious food, what to do \n\n Ask me about anything that you want. You can type or speak."
             }
         }
     },
@@ -72,7 +72,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Teacher Sakhi! \n I can suggest you activities that you can do with your students (of age 3 to 8 years) at schools.\n I can also answer your questions about the play based learning suggested in the new NCF for Foundational Stage. \n Here are few examples of what you can ask. \n Examples: \n What activity can I do with students to teach sorting or counting numbers \n How can I conduct my class with children with special needs \n What can I do to engage a child who is always distracted. \n I can answer your questions about the new NCF \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Teacher Sakhi! \n I can suggest you activities that you can do with your students (of age 3 to 8 years) at schools.\n I can also answer your questions about the play based learning suggested in the new NCF for Foundational Stage. \n Here are few examples of what you can ask. \n\n Examples: \n- What activity can I do with students to teach sorting or counting numbers \n- How can I conduct my class with children with special needs \n- What can I do to engage a child who is always distracted. \n I can answer your questions about the new NCF \n\n Ask me about anything that you want. You can type or speak."
             }
         }
     },
@@ -97,7 +97,7 @@
     "footer_message": {
         "message": {
             "type": "text",
-            "text": "Hope you liked it! \n \n  -If you want to go to previous menu enter “*”. \n   -If you want to go to main menu enter “#”"
+            "text": "Hope you liked it! \n \n  -If you want to go to previous menu enter “*”. \n  -If you want to go to main menu enter “#”"
         }
     }
 }

@@ -2,6 +2,7 @@ const language = require("../language");
 const userSession = require("../session");
 const axios = require("axios");
 const qs = require('qs');
+const { logger } = require("../logger");
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
@@ -21,7 +22,7 @@ const audienceMap = {
  * @param {*} incomingMsg 
  */
 const sendLangSelection = (incomingMsg) => {
-  console.log("⭆ sendLangSelection");
+  logger.debug("⭆ sendLangSelection");
   let langSelecBody = language.getMessage(language.defaultLang, null, 'lang_selection');
   sendMessage(langSelecBody, incomingMsg);
 }
@@ -33,7 +34,7 @@ const sendLangSelection = (incomingMsg) => {
  * @param {*} msg 
  */
 const sendBotSelection = (req, msg) => {
-  console.log("⭆ sendBotSelection");
+  logger.info("⭆ sendBotSelection");
   let body = language.getMessage(userSession.getUserLanguage(req, msg), null, "bot_selection");
   sendMessage(body, msg);
 }
@@ -45,7 +46,7 @@ const sendBotSelection = (req, msg) => {
  * @param {*} msg 
  */
 const sendBotWelcomeMsg = (req, msg) => {
-  console.log("⭆ sendBotWelcomeMsg");
+  logger.debug("⭆ sendBotWelcomeMsg");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
   let body = language.getMessage(userLang, userBot, 'Welcome');
@@ -58,7 +59,7 @@ const sendBotWelcomeMsg = (req, msg) => {
  * @param {*} msg 
  */
 const sendBotResponse = async (req, msg) => {
-  console.log("⭆ sendBotResponse \n\n\n");
+  logger.debug("⭆ sendBotResponse \n\n\n");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
 
@@ -73,7 +74,7 @@ const sendBotResponse = async (req, msg) => {
  * @param {*} userBot 
  */
 const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
-  console.log("⭆ sendBotLoadingMsg \n");
+  logger.debug("⭆ sendBotLoadingMsg \n");
   let body = language.getMessage(userLang, null, 'loading_message');
   await sendMessage(body, msg);
 }
@@ -86,8 +87,8 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
-  console.log("⭆ sendBotAnswer\n");
-  // console.log('msgcheck', JSON.stringify(msg))
+  logger.debug("⭆ sendBotAnswer\n");
+  // logger.debug('msgcheck', JSON.stringify(msg))
   await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
       let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
@@ -95,11 +96,11 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
       await sendMessage(bodyMessage, msg);
 
       let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
-      audioMessage.message.url = "https://www.buildquickbots.com/whatsapp/media/sample/audio/sample02.mp3";//queryResponse?.output?.audio;
-      await sendMessage(audioMessage, msg)
+      audioMessage.message.url = queryResponse?.output?.audio;
+      await sendMessage(audioMessage, msg);
     })
     .catch(err => {
-      console.error('Error in fetchQueryRespone:', err);
+      logger.error('Error in fetchQueryRespone:', err);
     });
 }
 
@@ -110,7 +111,7 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
-  console.log("⭆ sendBotReplyFooter \n");
+  logger.debug("⭆ sendBotReplyFooter \n");
   let body = language.getMessage(userLang, null, 'footer_message');
   await sendMessage(body, msg);
 }
@@ -122,7 +123,7 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  */
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
-  // console.log('⭆ sendMessage', body);
+  // logger.debug('⭆ sendMessage', body);
   body = decorateWAMessage(body, incomingMsg);
 
   let data = qs.stringify(body);
@@ -141,21 +142,21 @@ const sendMessage = async (body, msg) => {
 
     await axios(config)
     .then((resp)=> {
-      console.log("sendMessage success - ", resp.status);
+      logger.debug("sendMessage success - ", resp.status);
       return resp;
     })
     .catch((error) => {
-      console.log(error.toJSON());
+      logger.error(error.toJSON());
     })
     // request
     // .then((response) => {
-    //     console.log(JSON.stringify(response.data));
+    //     logger.debug(JSON.stringify(response.data));
     // })
     // .catch((error) => {
-    //     console.log(error);
+    //     logger.debug(error);
     // });
   } catch (error) {
-    console.log("webhook => error occurred with status code:", error);
+    logger.error("webhook => error occurred with status code:", error);
   } 
 }
 
@@ -201,10 +202,10 @@ const sendTestMessage = async () => {
   
   axios.request(config)
   .then((response) => {
-    console.log(JSON.stringify(response.data));
+    logger.info(JSON.stringify(response.data));
   })
   .catch((error) => {
-    console.log(error);
+    logger.info(error);
   });
 }
 
@@ -215,7 +216,7 @@ const sendTestMessage = async () => {
  * @returns 
  */
 const setMessageTo = (body, incomingMsg) => {
-  console.log('⭆ sendMessage', incomingMsg);
+  logger.info('⭆ sendMessage', incomingMsg);
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
   } else {
@@ -233,8 +234,8 @@ const setMessageTo = (body, incomingMsg) => {
  * @returns {Promise<Object>} - A promise resolving to the response data.
  */
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
-  console.log("⭆ fetchQueryRespone");
-  console.log(msg);
+  logger.info("⭆ fetchQueryRespone");
+  logger.info(msg);
   let data = {
     input: {
       "language": userLang
@@ -271,11 +272,11 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  console.log('axios', axiosConfig);
+  logger.info('axios', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
-    // console.log('Telemetry request successful:', response.data);
+    // logger.info('Telemetry request successful:', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
     // console.error('Telemetry request failed:', error);
