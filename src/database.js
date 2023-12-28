@@ -1,75 +1,65 @@
 const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
-const { Client } = require('pg');
+// const pgSession = require('connect-pg-simple')(session);
+var SequelizeStore = require("connect-session-sequelize")(session.Store);
+// const { Client } = require('pg');
 const { logger } = require('./logger');
+const { Sequelize, DataTypes, Model } = require('sequelize');
 const POSTGRES_URL = process.env.POSTGRES_URL;
 const oneDay = 1000 * 60 * 60 * 24;
+const sequelize = new Sequelize(POSTGRES_URL);
+// class Session extends Model {}
 
-const client = new Client({
-    connectionString: POSTGRES_URL
+const Session = sequelize.define("Session", {
+  sid: {
+    type: Sequelize.STRING,
+    primaryKey: true,
+  },
+  userId: Sequelize.STRING,
+  expires: Sequelize.DATE,
+  data: Sequelize.TEXT,
 });
 
-const dbStore = new pgSession({
-  tableName : 'session',
-  conString: POSTGRES_URL,
+function extendDefaultFields(defaults, session) {
+  console.log(defaults, session);
+  return {
+    data: defaults.data,
+    expires: defaults.expires,
+    userId: session.userId,
+  };
+}
+
+const store = new SequelizeStore({
+  db: sequelize,
+  table: "Session",
+  extendDefaultFields,
 });
 
 const init = () => {
   logger.info("⭆ Database init!");
-  client.connect((err) => { 
-    //Connected Database
-    if (err) {
-      logger.error("Database connection failed: \n", err);
-    } else {
-      logger.info("Data connection success");
-    }
-  });
-
   return session({
       secret: "ABEGkZlkMAYjAgs-sJSPdqSRIMDoHg",
       saveUninitialized: true,
       resave: true,
-      store: dbStore,
+      store,
       cookie: { maxAge: oneDay }
   })
 }
+
+store.sync();
+
 /**
  * 
  * @param {text: "sql query $1", values: ["value1"]} queryObj 
  * @returns 
  */
-const query = async (queryObj) => {
-  try{
-    const res = await client.query(queryObj);
-    logger.info("⭆ query - DB Query resp:", res);
-    await client.end();
-    return res?.rows[0];
-  } catch (err) {
-    logger.error("Query resp:", err);
-    await client.end();
+const getData = async (userId) => {
+  try {
+    let userSess = Session.findOne({where: {userId: userId} });
+    return userSess;
+  } catch (error) {
+    logger.error(error, "Database query - Get user session failed %s", userId);
   }
 }
 
-const updateUid = async (req, uid) => {
-  
-  let updateQuery = 'UPDATE session SET uid = $1 WHERE sid = "'+ req.sessionID + '"';
-  let queryObj = {
-    text: updateQuery,
-    values: [uid]
-  }
-  // logger.debug("updateUid", queryObj);
-  try{
-    const res = await client.query(queryObj);
-    logger.info("⭆ updateUid - DB Query resp:", res);
-    await client.end();
-    return res?.rows[0];
-  } catch (err) {
-    logger.error("Query resp:", err);
-    await client.end();
-  }
-}
-
-
-
-module.exports = {init, dbStore, client, query, updateUid}
+module.exports = {init, getData}
 

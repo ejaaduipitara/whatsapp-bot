@@ -125,9 +125,9 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
   body = decorateWAMessage(body, incomingMsg);
-
+  logger.debug('⭆ sendMessage: %o', body);
   let data = qs.stringify(body);
-  logger.info('⭆ sendMessage', data);
+  
   try {
     let config = {
       method: 'post',
@@ -151,7 +151,7 @@ const sendMessage = async (body, msg) => {
       logger.error(error.toJSON());
     })
   } catch (error) {
-    logger.error("webhook => error occurred with status code:", error);
+    // logger.error("webhook => error occurred with status code: %o", error);
   } 
 }
 

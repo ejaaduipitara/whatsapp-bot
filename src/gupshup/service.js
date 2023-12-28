@@ -26,7 +26,7 @@ const webhook = async (req, res) => {
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
     let oldMsgTs = userSession.getLatestMessageTimestamp(req, res);
-    logger.info("msg.timestamp:", msg.timestamp);
+    logger.info("msg.timestamp: %s", msg.timestamp);
     if(oldMsgTs === msg.timestamp) {
     //   req.send("Request is already recieved");
       return;

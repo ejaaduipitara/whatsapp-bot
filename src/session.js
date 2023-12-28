@@ -20,7 +20,7 @@ const init = () => {
  * @param {*} incomingMsg 
  * @returns 
  */
-const getUserSessionId = (incomingMsg) => {
+const getUseruid = (incomingMsg) => {
     let shortUserName, shortRandMobile;
    
     try {
@@ -41,32 +41,26 @@ const getUserSessionId = (incomingMsg) => {
 const createSession = async (req, incomingMsg) => {
   // inMemoryStore[id]
   // logger.info("req session:", req.session);
-  let sessionId = req?.session?.sessionId || deafultSession.sessionId;
-
-  if(!sessionId) {
-    sessionId = getUserSessionId(incomingMsg);
+  // let uid = req?.session?.userId || deafultSession.userId;
+  let uid = getUseruid(incomingMsg);
+  let userSess = await database.getData(uid);
+  logger.debug("User Session %o", userSess);
+  if(!userSess?.userId) {
     // TODO: temporary solution
-    deafultSession.sessionId = sessionId;
+    deafultSession.userId = uid;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     
-    req.session.sessionId = sessionId;
+    req.session.userId = uid;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     // logger.info("req session:", req);
-    logger.info("✅ new session created: ", sessionId, ", sessionID:", req.sessionID);
-    let userSess = await database.updateUid(req, sessionId);
+    logger.info(`✅ new session created uid: ${uid}`);
+    // let userSess = await database.updateUid(req, uid);
     // logger.debug("User Session", userSess);
     return false;
   } else {
+    logger.info(`✓ session already exist uid: ${uid}, sessionID:${userSess.sid}`);
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    let getSessionQuery = {
-      text: 'SELECT * from session WHERE uid = $1',
-      values: [sessionId]
-    }
-    let userSess = await database.query(getSessionQuery);
-  
-    logger.debug("User Session", userSess);
-    logger.info("✓ session already exist: ", sessionId, ", sessionID:", req.sessionID);
     return true;
   }
 }
@@ -75,7 +69,7 @@ const setUserLanguage = (req, msg) => {
     logger.debug("⭆ setUserLanguage");
     
     let userReplyBtnId = msg?.input?.context?.id;
-    logger.info("userReplyBtnId: ",userReplyBtnId, "btn_reply: ", msg?.input);
+    logger.info(`userReplyBtnId:${userReplyBtnId}, btn_reply: ${msg?.input}`);
     let selLang =  userReplyBtnId && userReplyBtnId.includes(sessionLangKey) && userReplyBtnId?.split('__')[1]
     // logger.info('User selected Language: ', selLang)
 
@@ -83,9 +77,9 @@ const setUserLanguage = (req, msg) => {
         // If not present, set the default value from the incoming message
         req.session[sessionLangKey] = selLang;
         deafultSession[sessionLangKey] = selLang;
-        logger.info(`✅ Language set ${selLang}, req session`);
+        logger.info(`✅ Language set ${selLang}: %o`, req.session);
     } else {
-        logger.debug('✓ User selected lang: ', req.session[sessionLangKey]);
+        logger.debug('✓ User selected lang: %o', req.session[sessionLangKey]);
         // if (id && languageSelection !== id && id.includes('lan')) {
         //     req.session.languageSelection = id;
         //     logger.info('Updated languageSelection:', id);
@@ -100,7 +94,7 @@ const getUserLanguage = (req, msg) => {
 } 
 
 const setUserBot = (req, msg) => {
-  logger.debug("⭆ setUserBot:",  msg?.input?.context?.id);
+  logger.debug("⭆ setUserBot: %s",  msg?.input?.context?.id);
   let userReplyBtnId = msg?.input?.context?.id;
 
   let botId =  userReplyBtnId && userReplyBtnId.includes(sessionBotKey) && userReplyBtnId?.split('__')[1]
@@ -108,9 +102,9 @@ const setUserBot = (req, msg) => {
   if (botId) {
       req.session[sessionBotKey] = botId;
     deafultSession[sessionBotKey] = botId;
-      logger.info(`✅ User selected bot ${botId}, req session`, req.session);
+      logger.info(`✅ User selected bot ${botId} req session %o`, req.session );
   } else {
-      logger.debug('✓ User selected bot: ', req.session[sessionBotKey]);
+      logger.debug('✓ User selected bot: %s', req.session[sessionBotKey]);
   }
   return botId;
 } 
@@ -150,7 +144,7 @@ const getSession = (req, msg) => {
 }
 
 const getLatestMessageTimestamp = (req, res) => {
-  logger.debug("Session ts:",deafultSession[sessionlatestMsgTimestamp]);
+  logger.debug("Session ts:", deafultSession[sessionlatestMsgTimestamp]);
   return deafultSession[sessionlatestMsgTimestamp];
 }
 
