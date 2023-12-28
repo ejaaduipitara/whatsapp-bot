@@ -3,6 +3,7 @@ const userSession = require("../session");
 const axios = require("axios");
 const qs = require('qs');
 const { logger } = require("../logger");
+const telemetryService = require("../telemetryService");
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
@@ -22,7 +23,7 @@ const audienceMap = {
  * @param {*} incomingMsg 
  */
 const sendLangSelection = (incomingMsg) => {
-  logger.debug("⭆ sendLangSelection");
+  logger.info("⭆ sendLangSelection");
   let langSelecBody = language.getMessage(language.defaultLang, null, 'lang_selection');
   sendMessage(langSelecBody, incomingMsg);
 }
@@ -46,7 +47,7 @@ const sendBotSelection = (req, msg) => {
  * @param {*} msg 
  */
 const sendBotWelcomeMsg = (req, msg) => {
-  logger.debug("⭆ sendBotWelcomeMsg");
+  logger.info("⭆ sendBotWelcomeMsg");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
   let body = language.getMessage(userLang, userBot, 'Welcome');
@@ -59,7 +60,7 @@ const sendBotWelcomeMsg = (req, msg) => {
  * @param {*} msg 
  */
 const sendBotResponse = async (req, msg) => {
-  logger.debug("⭆ sendBotResponse \n\n\n");
+  logger.info("⭆ sendBotResponse");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
 
@@ -74,7 +75,7 @@ const sendBotResponse = async (req, msg) => {
  * @param {*} userBot 
  */
 const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
-  logger.debug("⭆ sendBotLoadingMsg \n");
+  logger.info("⭆ sendBotLoadingMsg");
   let body = language.getMessage(userLang, null, 'loading_message');
   await sendMessage(body, msg);
 }
@@ -87,7 +88,7 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
-  logger.debug("⭆ sendBotAnswer\n");
+  logger.info("⭆ sendBotAnswer");
   // logger.debug('msgcheck', JSON.stringify(msg))
   await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
@@ -111,7 +112,7 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
  * @param {*} userBot 
  */
 const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
-  logger.debug("⭆ sendBotReplyFooter \n");
+  logger.info("⭆ sendBotReplyFooter");
   let body = language.getMessage(userLang, null, 'footer_message');
   await sendMessage(body, msg);
 }
@@ -123,10 +124,10 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  */
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
-  // logger.debug('⭆ sendMessage', body);
   body = decorateWAMessage(body, incomingMsg);
-
+  logger.debug('⭆ sendMessage: %o', body);
   let data = qs.stringify(body);
+  
   try {
     let config = {
       method: 'post',
@@ -141,22 +142,16 @@ const sendMessage = async (body, msg) => {
     };
 
     await axios(config)
-    .then((resp)=> {
-      logger.debug("sendMessage success - ", resp.status);
+    .then((resp, msg)=> {
+      // logger.debug("sendMessage success - ", resp);
+      telemetryService.logEvent(req, msg);
       return resp;
     })
     .catch((error) => {
       logger.error(error.toJSON());
     })
-    // request
-    // .then((response) => {
-    //     logger.debug(JSON.stringify(response.data));
-    // })
-    // .catch((error) => {
-    //     logger.debug(error);
-    // });
   } catch (error) {
-    logger.error("webhook => error occurred with status code:", error);
+    // logger.error("webhook => error occurred with status code: %o", error);
   } 
 }
 
@@ -205,7 +200,7 @@ const sendTestMessage = async () => {
     logger.info(JSON.stringify(response.data));
   })
   .catch((error) => {
-    logger.info(error);
+    logger.error(error);
   });
 }
 
@@ -216,7 +211,7 @@ const sendTestMessage = async () => {
  * @returns 
  */
 const setMessageTo = (body, incomingMsg) => {
-  logger.info('⭆ sendMessage', incomingMsg);
+  // logger.info('⭆ sendMessage', incomingMsg);
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
   } else {
@@ -234,8 +229,7 @@ const setMessageTo = (body, incomingMsg) => {
  * @returns {Promise<Object>} - A promise resolving to the response data.
  */
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
-  logger.info("⭆ fetchQueryRespone");
-  logger.info(msg);
+  // logger.debug("⭆ fetchQueryRespone", msg);
   let data = {
     input: {
       "language": userLang
@@ -272,14 +266,14 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  logger.info('axios', axiosConfig);
+  // logger.debug('axios', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
     // logger.info('Telemetry request successful:', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
-    // console.error('Telemetry request failed:', error);
+    console.error('fetch response from bot failed:', error);
     throw error; // Throw an error to handle it wherever the function is called
   }
 };

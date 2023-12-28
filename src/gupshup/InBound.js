@@ -36,6 +36,7 @@ class InBoundGupshup extends InBound {
         this.userName = payload?.sender?.name
         this.type = payload?.type;
         this.input = this.getInput(reqBody?.payload?.payload, payload.type);
+        logger.debug("InBound converted object: %o", this);
     }
 
     getInput(payload, inputType) {
@@ -48,7 +49,7 @@ class InBoundGupshup extends InBound {
                 break;
             case "button_reply" :
                 inputObj.text = payload.title;
-                inputObj.context = {id: payload.postbackText};
+                inputObj.context = {id: payload.postbackText, type: payload.id};
                 break;
             case "audio": 
                 inputObj.audio = payload.url;
@@ -57,7 +58,6 @@ class InBoundGupshup extends InBound {
             default: 
                 inputObj.text = payload.text;
         }
-        logger.info("InBound converted object: ", inputObj);
         return inputObj;
     }
 }
