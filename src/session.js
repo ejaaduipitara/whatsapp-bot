@@ -45,23 +45,25 @@ const createSession = async (req, incomingMsg) => {
   let uid = getUseruid(incomingMsg);
   let userSess = await database.getData(uid);
   logger.debug("User Session %o", userSess);
-  if(!userSess?.userId) {
+  if(userSess?.sid != req.sessionID) {
     // TODO: temporary solution
     deafultSession.userId = uid;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     
     req.session.userId = uid;
+    req.session.isNewUser = true;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     // logger.info("req session:", req);
-    logger.info(`✅ new session created uid: ${uid}`);
+    logger.info(`✅ new session created: \n %o`, req.session);
     // let userSess = await database.updateUid(req, uid);
     // logger.debug("User Session", userSess);
-    return false;
+    return userSess;
   } else {
-    logger.info(`✓ session already exist uid: ${uid}, sessionID:${userSess.sid}`);
+    logger.info(`✓ session already exist - DB resp \n %o`, userSess);
+    req.session.isNewUser = false;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    return true;
+    return userSess;
   }
 }
 

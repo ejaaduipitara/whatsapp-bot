@@ -23,6 +23,8 @@ const webhook = async (req, res) => {
         return;
     } 
 
+    logger.debug("Request session: %o", req.session);
+
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
     let oldMsgTs = userSession.getLatestMessageTimestamp(req, res);
@@ -32,45 +34,70 @@ const webhook = async (req, res) => {
       return;
     }
 
-    logger.info("Webhook - RawData: ", msg.rawData);
+    logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
-    let isSessionExist = userSession.createSession(req, msg);
-    isLangSelected = userSession.getUserLanguage(req, msg);
-    isBotSelected = userSession.getUserBot(req, msg);
+    let userSess = await userSession.createSession(req, msg);
+    let isNewUser = req.session.isNewUser;
+    if(!isNewUser) {
+        isLangSelected = userSession.getUserLanguage(req, msg);
+        isBotSelected = userSession.getUserBot(req, msg);
+    }
     
-    logger.info(`\n req session: ${JSON.stringify(req.session)} `);
+    logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
     logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
 
     try {
-        if (!isSessionExist || msg?.input?.text === '#') {
-            userSession.clearSession(req);
-            logger.info("👨 First time user");
-            telemetry.startEvent(req, msg);
-            messages.sendLangSelection(msg);
+        if ((isNewUser && !isLangSelected) || msg?.input?.text === '#') {
+            // userSession.clearSession(req);
+            sendLanguageSelection(req, msg);
             res.sendStatus(200);
         } else if (!isLangSelected || msg?.input?.text === '*') {
-            logger.info("📚 Language selected");
-            userSession.clearSessionBot(req);
-            userSession.setUserLanguage(req, msg);
-            messages.sendBotSelection(req, msg);
+            sendBotSelection(req, msg);
             res.sendStatus(200);
-        } else if (!isBotSelected){
-            logger.info("🤖 Bot selected");
-            userSession.setUserBot(req, msg);
-            messages.sendBotWelcomeMsg(req, msg);
+        } else if (!isBotSelected) {
+            sendBotWelcomeMsg(req, msg);
             res.sendStatus(200);
         } else {
             // existing user & converstaion is happening
             counter++;
-            logger.info('User query'+ counter);
-            await messages.sendBotResponse(req, msg);
+            logger.info('User query '+ counter);
+            logger.debug('msg.type %s', msg.type);
+            if(msg?.type == "button_reply") {
+                let selectionType = msg?.input?.context?.type;
+                logger.debug('msg.type %s', selectionType);
+                switch(selectionType) {
+                    case 'lang': sendBotSelection(req, msg); break;
+                    case 'bot': sendBotWelcomeMsg(req, msg); break;
+                    default: sendLanguageSelection(req, msg);
+                }
+            } else {
+                await messages.sendBotResponse(req, msg);
+            }
             res.sendStatus(200);
         }
     } catch (error) {
         logger.error("Webhook error:", error?.resp || error?.status);
     }
-    
+}
+
+const sendLanguageSelection = (req, msg) => {
+    logger.info("👨 First time user");
+    telemetry.startEvent(req, msg);
+    messages.sendLangSelection(msg);
+}
+
+const sendBotSelection = (req, msg) => {
+    logger.info("📚 Language selected");
+    // userSession.clearSessionBot(req);
+    userSession.setUserLanguage(req, msg);
+    messages.sendBotSelection(req, msg);
+}
+
+const sendBotWelcomeMsg = (req, msg) => {
+    logger.info("🤖 Bot selected");
+    userSession.setUserBot(req, msg);
+    messages.sendBotWelcomeMsg(req, msg);
 }
 
 // For Health check

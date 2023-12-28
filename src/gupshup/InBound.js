@@ -49,7 +49,7 @@ class InBoundGupshup extends InBound {
                 break;
             case "button_reply" :
                 inputObj.text = payload.title;
-                inputObj.context = {id: payload.postbackText};
+                inputObj.context = {id: payload.postbackText, type: payload.id};
                 break;
             case "audio": 
                 inputObj.audio = payload.url;
