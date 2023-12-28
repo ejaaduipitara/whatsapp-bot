@@ -15,13 +15,13 @@ const dbStore = new pgSession({
 });
 
 const init = () => {
-  logger.info("Database init!");
+  logger.info("⭆ Database init!");
   client.connect((err) => { 
     //Connected Database
     if (err) {
-      logger.info(err);
+      logger.error("Database connection failed: \n", err);
     } else {
-      logger.info("Data logging initiated!");
+      logger.info("Data connection success");
     }
   });
 
@@ -41,7 +41,7 @@ const init = () => {
 const query = async (queryObj) => {
   try{
     const res = await client.query(queryObj);
-    // logger.debug("Query resp:", res);
+    logger.info("⭆ query - DB Query resp:", res);
     await client.end();
     return res?.rows[0];
   } catch (err) {
@@ -60,6 +60,7 @@ const updateUid = async (req, uid) => {
   // logger.debug("updateUid", queryObj);
   try{
     const res = await client.query(queryObj);
+    logger.info("⭆ updateUid - DB Query resp:", res);
     await client.end();
     return res?.rows[0];
   } catch (err) {

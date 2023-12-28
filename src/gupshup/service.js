@@ -8,7 +8,8 @@ const { logger } = require("../logger");
 
 let counter = 0;
 var isLangSelected, isBotSelected;
-// let telemetry = new telemetryService();
+let telemetry = new telemetryService();
+telemetry.initialize();
 
 const webhook = async (req, res) => {
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
@@ -33,7 +34,6 @@ const webhook = async (req, res) => {
 
     logger.info("Webhook - RawData: ", msg.rawData);
     // telemetry Initializing
-    // telemetry.initEvent();
     let isSessionExist = userSession.createSession(req, msg);
     isLangSelected = userSession.getUserLanguage(req, msg);
     isBotSelected = userSession.getUserBot(req, msg);
@@ -42,31 +42,35 @@ const webhook = async (req, res) => {
     logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
 
-    if (!isSessionExist || msg?.input?.text === '#') {
-        userSession.clearSession(req);
-        logger.info("👨 First time user");
-        // telemetry.startEvent(req, msg);
-        messages.sendLangSelection(msg);
-        res.sendStatus(200);
-    } else if (!isLangSelected || msg?.input?.text === '*') {
-        logger.info("📚 Language selected");
-        userSession.clearSessionBot(req);
-        userSession.setUserLanguage(req, msg);
-        messages.sendBotSelection(req, msg);
-        res.sendStatus(200);
-    } else if (!isBotSelected){
-        logger.info("🤖 Bot selected");
-        userSession.setUserBot(req, msg);
-        messages.sendBotWelcomeMsg(req, msg);
-        res.sendStatus(200);
-    } else {
-        // existing user & converstaion is happening
-        counter++;
-        logger.info('User query'+ counter);
-        await messages.sendBotResponse(req, msg);
-        res.sendStatus(200);
+    try {
+        if (!isSessionExist || msg?.input?.text === '#') {
+            userSession.clearSession(req);
+            logger.info("👨 First time user");
+            telemetry.startEvent(req, msg);
+            messages.sendLangSelection(msg);
+            res.sendStatus(200);
+        } else if (!isLangSelected || msg?.input?.text === '*') {
+            logger.info("📚 Language selected");
+            userSession.clearSessionBot(req);
+            userSession.setUserLanguage(req, msg);
+            messages.sendBotSelection(req, msg);
+            res.sendStatus(200);
+        } else if (!isBotSelected){
+            logger.info("🤖 Bot selected");
+            userSession.setUserBot(req, msg);
+            messages.sendBotWelcomeMsg(req, msg);
+            res.sendStatus(200);
+        } else {
+            // existing user & converstaion is happening
+            counter++;
+            logger.info('User query'+ counter);
+            await messages.sendBotResponse(req, msg);
+            res.sendStatus(200);
+        }
+    } catch (error) {
+        logger.error("Webhook error:", error?.resp || error?.status);
     }
-    // telemetry.logEvent(req, msg);
+    
 }
 
 // For Health check

@@ -4,6 +4,8 @@ const dateFormat = require('dateformat');
 const uuidv1 = require('uuid/v1');
 const _ = require('lodash');
 const session = require('./session');
+const { logger } = require('./logger');
+const isInitialized = false;
 
 let TELEMETRY_URL = process.env.TELEMETRY_SERVICE_URL;
 let TELEMETRY_AUTH_TOKEN = process.env.API_TOKEN;
@@ -13,7 +15,7 @@ let APP_NAME = process.env.APP_NAME;
 var default_config = {
   'runningEnv': 'server',
   'dispatcher': function (event) {},
-  'batchsize': 10
+  'batchsize': 1
 };
 
 function telemetryService() {}
@@ -62,8 +64,8 @@ telemetryService.prototype.createData  = (req,eventType, msg) => {
   if (eventType === 'log') {
     edata.type = 'api_call';
     edata.level = 'INFO';
-    edata.message = msg?.input?.text || '';
-    edata.params = [{ message_id: msg?.id }, { message_type:msg?.type }];
+    edata.message = 'Success';
+    edata.params = [{ mesId: msg?.id }, { mesType:msg?.type },{msgInput: msg?.input?.text || ''}];
   }
   else if(eventType === 'start') {
     edata.type = 'session'
@@ -78,8 +80,15 @@ telemetryService.prototype.createData  = (req,eventType, msg) => {
  * Initializes telemetry event.
  * @description Initializes telemetry event based on telemetry configuration.
  */
-telemetryService.prototype.initEvent = function() {
-  telemetry.init(telemetry.config);
+telemetryService.prototype.initialize = function() {
+  if(!this.isInitialized) {
+    let eDPConfig = {
+      host: TELEMETRY_URL
+    }
+    telemetry.init(eDPConfig);
+  } else {
+    return this;
+  }
 }
 
 /**
@@ -90,6 +99,7 @@ telemetryService.prototype.initEvent = function() {
  */
 telemetryService.prototype.startEvent = function(req,msg) {
   let StartData = telemetry.createData(req, 'start',msg);
+  logger.debug("Telemetry start: ", StartData);
   telemetry.start(StartData);
 }
 
@@ -121,7 +131,7 @@ function SyncManager() {
    */
   this.dispatch = function (event) {
     console.log('dispacher', JSON.stringify(event));
-    // sendTelemetry('req', [event], ''); // Dispatch telemetry event
+    sendTelemetry('req', [event], ''); // Dispatch telemetry event
   };
 }
 
@@ -140,10 +150,10 @@ telemetryService.prototype.syncOnExit = function (cb) {
  */
 telemetryService.prototype.init = function (config) {
   default_config.dispatcher = new SyncManager()
-  config['host'] = config['host'] || process.env.sunbird_telemetry_service_local_url;
   default_config.dispatcher.init(config)
   this.config = Object.assign({}, config, default_config)
   Telemetry.initialize(this.config)
+  this.isInitialized = true;
 }
 
 /**
