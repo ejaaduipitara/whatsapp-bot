@@ -1,10 +1,9 @@
-const database = require("./database");
+const { UserModel, User, UserSqr } = require("./database/Models");
+const database = require("./database/database");
 const { logger } = require("./logger");
-
-const inMemoryStore = {};
 const sessionLangKey = "lang";
 const sessionBotKey = "bot";
-const sessionlatestMsgTimestamp = "msgTimestamp";
+const sessionlatestMsgTimestamp = "lastestMsgTimestamp";
 var deafultSession = {};
 const mobileMult = 2013;
 var sampleMobile = "910000000000";
@@ -39,27 +38,52 @@ const getUseruid = (incomingMsg) => {
 }
 
 const createSession = async (req, incomingMsg) => {
-  // inMemoryStore[id]
   // logger.info("req session:", req.session);
   // let uid = req?.session?.userId || deafultSession.userId;
   let uid = getUseruid(incomingMsg);
-  let userSess = await database.getData(uid);
+  // let userSess = await database.getData(uid);
+  let userSess = await UserSqr.findByPk(uid);
   logger.debug("User Session %o", userSess);
-  if(userSess?.sid != req.sessionID) {
+  if(!(userSess?.userId)) {
     // TODO: temporary solution
     deafultSession.userId = uid;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+    let userData = await UserSqr.findOne({where: {userId: uid}});
+    if(!userData) {
+      logger.warn("User not exist: %s", uid);
+      UserSqr.create({userId: uid});
+    }
     
     req.session.userId = uid;
     req.session.isNewUser = true;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     // logger.info("req session:", req);
-    logger.info(`✅ new session created: \n %o`, req.session);
+    logger.info(`✅ new session created: \n req.sessionID: %s \n %o`, req.sessionID, req.session);
     // let userSess = await database.updateUid(req, uid);
     // logger.debug("User Session", userSess);
-    return userSess;
+    return  ;
   } else {
-    logger.info(`✓ session already exist - DB resp \n %o`, userSess);
+    UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
+      logger.info("UserModel Lang Save Success %o", resp);
+    });
+    logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
+    // userSess.data = JSON.parse(userSess);
+
+    // if(userSess?.data?.lang) {
+    //   req.session.isNewUser = true;
+    // } else {
+    //   req.session.isNewUser = false;
+    // }
+
+    // userTabCols = Object.keys(userSess);
+    // userTabCols.map((prop, index)  => {
+    //   req.session[prop] = userSess[prop];
+    // });
+    req.session.userId = userSess.userId;
+    req.session[sessionLangKey] = userSess[sessionLangKey];
+    req.session[sessionBotKey] = userSess[sessionBotKey];
+    
+    logger.info(`Updated session data: \n %o`, req.session);
     req.session.isNewUser = false;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
@@ -77,6 +101,11 @@ const setUserLanguage = (req, msg) => {
 
     if (selLang) {
         // If not present, set the default value from the incoming message
+        // UserModel.update({[sessionLangKey]: selLang}, {userId: msg.userId});
+        
+        UserSqr.update({[sessionLangKey]: selLang}, {where: {userId: req.sessionID}}).then(resp => {
+            logger.info("UserModel Lang Save Success %o", resp);
+        });
         req.session[sessionLangKey] = selLang;
         deafultSession[sessionLangKey] = selLang;
         logger.info(`✅ Language set ${selLang}: %o`, req.session);
@@ -103,7 +132,10 @@ const setUserBot = (req, msg) => {
     
   if (botId) {
       req.session[sessionBotKey] = botId;
-    deafultSession[sessionBotKey] = botId;
+      deafultSession[sessionBotKey] = botId;
+      UserSqr.update({[sessionBotKey]: botId}, {where: {userId: req.sessionID}}).then(resp => {
+          logger.info("UserModel Bot Save Success %o", resp);
+      });
       logger.info(`✅ User selected bot ${botId} req session %o`, req.session );
   } else {
       logger.debug('✓ User selected bot: %s', req.session[sessionBotKey]);

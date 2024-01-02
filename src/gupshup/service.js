@@ -37,32 +37,34 @@ const webhook = async (req, res) => {
     logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
     let userSess = await userSession.createSession(req, msg);
+    logger.info("Webhook - createSession resp: \n%o", userSess)
     let isNewUser = req.session.isNewUser;
-    if(!isNewUser) {
-        isLangSelected = userSession.getUserLanguage(req, msg);
-        isBotSelected = userSession.getUserBot(req, msg);
+    if(userSess) {
+        // isLangSelected = userSession.getUserLanguage(req, msg);
+        // isBotSelected = userSession.getUserBot(req, msg);
+    // // } else {
+        isLangSelected = userSess.lang;
+        isBotSelected = userSess.bot;
     }
     
     logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
     logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
-
+    telemetry.logEvent(req, msg);
     try {
-        if ((isNewUser && !isLangSelected) || msg?.input?.text === '#') {
-            // userSession.clearSession(req);
-            sendLanguageSelection(req, msg);
-            res.sendStatus(200);
-        } else if (!isLangSelected || msg?.input?.text === '*') {
-            sendBotSelection(req, msg);
-            res.sendStatus(200);
-        } else if (!isBotSelected) {
-            sendBotWelcomeMsg(req, msg);
+        if(!isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
+            logger.debug('msg.type %s', msg.type);
+            if(!isLangSelected) { 
+                msg.input.text = '#';
+            } else if(!isBotSelected) {
+                msg.input.text = '*';
+            }
+            menuSelection(req, msg);
             res.sendStatus(200);
         } else {
             // existing user & converstaion is happening
             counter++;
             logger.info('User query '+ counter);
-            logger.debug('msg.type %s', msg.type);
             if(msg?.type == "button_reply") {
                 let selectionType = msg?.input?.context?.type;
                 logger.debug('msg.type %s', selectionType);
@@ -77,8 +79,27 @@ const webhook = async (req, res) => {
             res.sendStatus(200);
         }
     } catch (error) {
-        logger.error("Webhook error:", error?.resp || error?.status);
+        logger.error(error, "Webhook error:");
     }
+}
+
+const menuSelection = (req, msg) => {
+    if(msg?.type == "button_reply") {
+        let selectionType = msg?.input?.context?.type;
+        logger.debug('msg.type %s', selectionType);
+        switch(selectionType) {
+            case 'lang': sendBotSelection(req, msg); break;
+            case 'bot': sendBotWelcomeMsg(req, msg); break;
+            default: sendLanguageSelection(req, msg);
+        }
+    } else if (msg?.input?.text === '#') {
+        // userSession.clearSession(req);
+        sendLanguageSelection(req, msg);
+        // res.sendStatus(200);
+    } else if ( msg?.input?.text === '*') {
+        sendBotSelection(req, msg);
+        // res.sendStatus(200);
+    }  
 }
 
 const sendLanguageSelection = (req, msg) => {

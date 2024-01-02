@@ -143,15 +143,15 @@ const sendMessage = async (body, msg) => {
 
     await axios(config)
     .then((resp, msg)=> {
-      // logger.debug("sendMessage success - ", resp);
-      telemetryService.logEvent(req, msg);
+      // telemetryService.logEvent(req, msg);
+      // logger.debug("sendMessage success - /n%o", resp);
       return resp;
     })
     .catch((error) => {
-      logger.error(error.toJSON());
+      logger.error(error, "WhatsApp message failed..");
     })
   } catch (error) {
-    // logger.error("webhook => error occurred with status code: %o", error);
+    logger.error(error, "webhook => error occurred with status code: %o");
   } 
 }
 
