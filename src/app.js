@@ -15,7 +15,7 @@ const app = express(); // creates express http server
 app.use(body_parser.json());
 app.use(cookieParser());
 app.use(session.init());
-app.use(loggerPino.expressLogger);
+// app.use(loggerPino.logger);
 language.init();
 
 // Sets server port and logs message on success

@@ -36,6 +36,7 @@ class InBoundGupshup extends InBound {
         this.userName = payload?.sender?.name
         this.type = payload?.type;
         this.input = this.getInput(reqBody?.payload?.payload, payload.type);
+        this.userId = this.getUseruid();
         logger.debug("InBound converted object: %o", this);
     }
 
@@ -59,6 +60,33 @@ class InBoundGupshup extends InBound {
                 inputObj.text = payload.text;
         }
         return inputObj;
+    }
+
+    /**
+     * Returns user session id based of incoming message data
+     * @param {*} incomingMsg 
+     * @returns 
+     */
+    getUseruid = () => {
+        let incomingMsg = this;
+        const mobileMult = 2013;
+        var sampleMobile = "910000000000";
+        var sampleUserName= "ejpu";// ejp user
+        let shortUserName, shortRandMobile;
+    
+        try {
+            logger.debug("getUseruid -  UserName: %s Mobile: %s", incomingMsg.userName, incomingMsg.fromMobile);
+            shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
+            let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
+            shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+            return shortUserName+shortRandMobile;
+        } catch (err) {
+            logger.warn(err, `Generating default userId: `);
+            shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
+            let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
+            shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+            return shortUserName+shortRandMobile;
+        }
     }
 }
 
