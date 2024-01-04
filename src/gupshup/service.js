@@ -4,6 +4,7 @@ const inBoundGP = require('./InBound');
 const telemetryService = require('../telemetryService');
 const { logger } = require("../logger");
 const appConfig = require("../config");
+const { UserSqr } = require("../database/Models");
 
 let counter = 0;
 var isLangSelected, isBotSelected;
@@ -25,16 +26,16 @@ const webhook = async (req, res) => {
 
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
-    let userSess = await userSession.createSession(req, msg);
-
+    let userSess = await UserSqr.findByPk(msg?.userId);
     let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
-    if(isAlreadyServed(msg.timestamp, oldMsgTs)) {
+    if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {
         logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
         res.sendStatus(403);
         return;
     }
-
+    
+    userSess = await userSession.createSession(req, msg);
     logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
@@ -89,7 +90,7 @@ const webhook = async (req, res) => {
  */
 const isAlreadyServed = (curMsgTs, oldMsgTs) => {
     let alreadyServed = false;
-    if((curMsgTs>oldMsgTs) || (curMsgTs<oldMsgTs)) {
+    if((curMsgTs>oldMsgTs)) {
         alreadyServed = false;
     } else {
         alreadyServed = true;
