@@ -10,6 +10,7 @@ router.post('/webhook', (req, res) => {
         service.webhook(req, res);
     } else {
       // res.redirect("gupshup/webhook");
+      logger.debug("Gupshup/webhook: Other event != message");
       res.sendStatus(200);
     }
   });
