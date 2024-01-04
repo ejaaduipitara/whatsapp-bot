@@ -37,7 +37,7 @@ let telemetry = new telemetryService();
  */
 
 telemetryService.prototype.createData  = (req, eventType, msg) => {
-  logger.info("Telemetry CreateData - \nIncomingMsg: %o", msg)
+  logger.debug("Telemetry CreateData - \nIncomingMsg: %o", msg)
   let isLangSelection = session.getUserLanguage(req, msg);
   let isBotSelection = session.getUserBot(req, msg);
   
@@ -124,7 +124,7 @@ function SyncManager() {
    * @param {any} event - Event data to dispatch.
    */
   this.dispatch = function (event) {
-    logger.info('dispacher: %o', JSON.stringify(event));
+    logger.debug('dispacher: %o', JSON.stringify(event));
     sendTelemetry('req', [event], ''); // Dispatch telemetry event
   };
 }

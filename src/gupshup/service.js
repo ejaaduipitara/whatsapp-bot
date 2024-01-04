@@ -21,13 +21,13 @@ const webhook = async (req, res) => {
         res.sendStatus(402);
         return;
     } 
-    logger.debug("Request session: %o", req.session);
+    // logger.debug("Request session: %o", req.session);
 
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
     let userSess = await userSession.createSession(req, msg);
 
-    let oldMsgTs = userSess?.lastestMsgTimestamp; //userSession.getLatestMessageTimestamp(req, res);
+    let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs === msg.timestamp) {
       logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
@@ -38,21 +38,18 @@ const webhook = async (req, res) => {
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
     logger.info("Webhook - createSession resp: \n%o", userSess)
-    let isNewUser = req.session.isNewUser;
+    let isNewUser = userSess ? false : true;
     if(userSess) {
-        // isLangSelected = userSession.getUserLanguage(req, msg);
-        // isBotSelected = userSession.getUserBot(req, msg);
-    // // } else {
         isLangSelected = userSess.lang;
         isBotSelected = userSess.bot;
     }
     
     logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
     logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
-    // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
     telemetry.logEvent(req, msg);
     try {
-        if(!isLangSelected || !isBotSelected || (msg?.input?.text?.toString()?.toLowerCase() === 'hi') || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
+        // (msg?.input?.text?.toString()?.toLowerCase() === 'hi') 
+        if(!isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
             logger.debug('msg.type %s', msg.type);
             if(!isLangSelected) { 
                 msg.input.text = '#';

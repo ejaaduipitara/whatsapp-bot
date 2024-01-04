@@ -4,7 +4,7 @@ const { logger } = require("./logger");
 const sessionLangKey = "lang";
 const sessionBotKey = "bot";
 const sessionlatestMsgTimestamp = "lastestMsgTimestamp";
-var deafultSession = {};
+// var deafultSession = {};
 const mobileMult = 2013;
 var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
@@ -45,53 +45,37 @@ const createSession = async (req, incomingMsg) => {
   // let uid = req?.session?.userId || deafultSession.userId;
   let uid = getUseruid(incomingMsg);
   if(!uid) return;
-  
+
   // let userSess = await database.getData(uid);
   let userSess = await UserSqr.findByPk(uid);
-  logger.debug("User Session %o", userSess);
+  logger.debug("User data from DB \n %o", userSess);
   if(!(userSess?.userId)) {
-    // TODO: temporary solution
-    deafultSession.userId = uid;
-    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    let userData = await UserSqr.findOne({where: {userId: uid}});
-    if(!userData) {
+    // let userData = await UserSqr.findOne({where: {userId: uid}});
+    // if(!userData) {
       logger.warn("User not exist: %s", uid);
-      UserSqr.create({userId: uid});
-    }
+      UserSqr.create({userId: uid, [sessionlatestMsgTimestamp]: incomingMsg?.timestamp });
+    // }
     
     req.session.userId = uid;
     req.session.isNewUser = true;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     // logger.info("req session:", req);
-    logger.info(`✅ new session created: \n req.sessionID: %s \n %o`, req.sessionID, req.session);
-    // let userSess = await database.updateUid(req, uid);
+    logger.info(`✅ new session created: \n req.sessionID: %s \n Session: %o`, req.sessionID, req.session);
     // logger.debug("User Session", userSess);
-    return  ;
+    return userSess;
   } else {
-    UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
+    await UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
       logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
     });
     logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
-    // userSess.data = JSON.parse(userSess);
-
-    // if(userSess?.data?.lang) {
-    //   req.session.isNewUser = true;
-    // } else {
-    //   req.session.isNewUser = false;
-    // }
-
-    // userTabCols = Object.keys(userSess);
-    // userTabCols.map((prop, index)  => {
-    //   req.session[prop] = userSess[prop];
-    // });
+    
     req.session.userId = userSess.userId;
+    req.session.isNewUser = false;
     req.session[sessionLangKey] = userSess[sessionLangKey];
     req.session[sessionBotKey] = userSess[sessionBotKey];
+    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     
     logger.info(`Updated session data: \n %o`, req.session);
-    req.session.isNewUser = false;
-    req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    deafultSession[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     return userSess;
   }
 }
@@ -112,7 +96,7 @@ const setUserLanguage = (req, msg) => {
             logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
         });
         req.session[sessionLangKey] = selLang;
-        deafultSession[sessionLangKey] = selLang;
+        // deafultSession[sessionLangKey] = selLang;
         logger.info(`✅ Language set ${selLang}: %o`, req.session);
     } else {
         logger.debug('✓ User selected lang: %o', req.session[sessionLangKey]);
@@ -125,7 +109,8 @@ const setUserLanguage = (req, msg) => {
 }
 
 const getUserLanguage = (req, msg) => {
-  let lang = req?.session[sessionLangKey] || deafultSession[sessionLangKey];
+  // let lang = req?.session[sessionLangKey] || deafultSession[sessionLangKey];
+  let lang = req?.session[sessionLangKey];
   return lang;
 } 
 
@@ -137,7 +122,7 @@ const setUserBot = (req, msg) => {
     
   if (botId) {
       req.session[sessionBotKey] = botId;
-      deafultSession[sessionBotKey] = botId;
+      // deafultSession[sessionBotKey] = botId;
       UserSqr.update({[sessionBotKey]: botId}, {where: {userId: req.sessionID}}).then(resp => {
           logger.info("UserModel Bot Save Success %o", resp);
       });
@@ -149,7 +134,8 @@ const setUserBot = (req, msg) => {
 } 
 
 const getUserBot = (req, msg) => {
-  let userSelectedBotId = req?.session[sessionBotKey] || deafultSession[sessionBotKey];
+  // let userSelectedBotId = req?.session[sessionBotKey] || deafultSession[sessionBotKey];
+  let userSelectedBotId = req?.session[sessionBotKey];
   return userSelectedBotId;
 } 
 
@@ -159,18 +145,18 @@ const getUserBot = (req, msg) => {
  */
 const clearSession = (req) => {
   let clearLang = undefined;
-  if(req?.session) req.session[sessionLangKey] = clearLang;
-  deafultSession[sessionLangKey] = clearLang;
+  // if(req?.session) req.session[sessionLangKey] = clearLang;
+  // deafultSession[sessionLangKey] = clearLang;
 
   let clearBot = undefined;
-  if(req?.session) req.session[sessionBotKey] = clearBot;
-  deafultSession[sessionBotKey] = clearBot;
+  // if(req?.session) req.session[sessionBotKey] = clearBot;
+  // deafultSession[sessionBotKey] = clearBot;
 }
 
 const clearSessionBot = (req) => {
   let clearBot = undefined;
-  if(req?.session) req.session[sessionBotKey] = clearBot;
-  deafultSession[sessionBotKey] = clearBot;
+  // if(req?.session) req.session[sessionBotKey] = clearBot;
+  // deafultSession[sessionBotKey] = clearBot;
 }
 
 const getSession = (req, msg) => {
@@ -182,9 +168,4 @@ const getSession = (req, msg) => {
   return req.session;
 }
 
-const getLatestMessageTimestamp = (req, res) => {
-  logger.debug("Session ts: %s" , deafultSession[sessionlatestMsgTimestamp]);
-  return deafultSession[sessionlatestMsgTimestamp];
-}
-
-module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession, clearSession, clearSessionBot, getLatestMessageTimestamp }
+module.exports = {init, getUserLanguage, setUserLanguage, setUserBot, getUserBot, createSession, clearSession, clearSessionBot }
