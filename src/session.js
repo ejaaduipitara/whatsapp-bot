@@ -65,7 +65,7 @@ const createSession = async (req, incomingMsg) => {
     return userSess;
   } else {
     await UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
-      logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
+      logger.info("UserModel update Success %o", JSON.stringify(resp));
     });
     logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
     

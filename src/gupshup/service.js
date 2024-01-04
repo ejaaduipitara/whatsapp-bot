@@ -29,9 +29,10 @@ const webhook = async (req, res) => {
 
     let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
-    if(oldMsgTs === msg.timestamp) {
-      logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
-      return;
+    if(isAlreadyServed(msg.timestamp, oldMsgTs)) {
+        logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
+        res.sendStatus(403);
+        return;
     }
 
     logger.debug("Webhook - RawData: %o", msg.rawData);
@@ -78,6 +79,23 @@ const webhook = async (req, res) => {
     } catch (error) {
         logger.error(error, "Webhook error:");
     }
+}
+
+/**
+ * To check the inComing message is already served & stored in the DB
+ * @param {miliseconds} curMsgTs 
+ * @param {miliseconds} oldMsgTs 
+ * @returns {boolean} alreadyServed
+ */
+const isAlreadyServed = (curMsgTs, oldMsgTs) => {
+    let alreadyServed = false;
+    if((curMsgTs>oldMsgTs) || (curMsgTs<oldMsgTs)) {
+        alreadyServed = false;
+    } else {
+        alreadyServed = true;
+    }
+    logger.info("Message is already served %s", alreadyServed);
+    return alreadyServed;
 }
 
 const menuSelection = (req, msg) => {
