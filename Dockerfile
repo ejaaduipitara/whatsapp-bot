@@ -20,5 +20,6 @@ WORKDIR /app
 COPY package.json .
 RUN npm install
 COPY . .
+RUN rm -rf .env.local
 EXPOSE 3010
 CMD [ "npm" , "start"]
