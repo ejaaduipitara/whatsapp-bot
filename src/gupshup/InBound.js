@@ -31,11 +31,11 @@ class InBoundGupshup extends InBound {
         super(reqBody);
         logger.debug("InBoundGupshup - input reqBody: %o", reqBody);
         let payload = reqBody?.payload;
-        if(reqBody?.type != 'message') return; 
+        this.userName = payload?.sender?.name
+        if(!this.userName) return; 
         this.id = payload.id;
         this.timestamp = reqBody.timestamp,
         this.fromMobile = payload?.sender?.phone;
-        this.userName = payload?.sender?.name
         this.type = payload?.type;
         this.input = this.getInput(reqBody?.payload?.payload, payload.type);
         this.userId = this.getUseruid();
@@ -75,9 +75,9 @@ class InBoundGupshup extends InBound {
         var sampleMobile = "910000000000";
         var sampleUserName= "ejpu";// ejp user
         let shortUserName, shortRandMobile;
-    
+        
         try {
-            logger.debug("getUseruid -  UserName: %s Mobile: %s", incomingMsg.userName, incomingMsg.fromMobile);
+            logger.debug("getUseruId -  UserName: %s Mobile: %s", incomingMsg.userName, incomingMsg.fromMobile);
             shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
             let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
             shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);

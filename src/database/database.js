@@ -62,11 +62,15 @@ store.sync();
  * @returns 
  */
 function genuuid(req) {
-  let incomingMsg =  new InBoundGupshup(req.body);
-  let userId = getUseruid(incomingMsg);
+  let userId;
+  if(req?.body && req?.body?.payload) {
+    let incomingMsg =  new InBoundGupshup(req.body);
+    userId = getUseruid(incomingMsg);
+  }
+  
   // let userData = getData(userId);
   // logger.info("extendDefaultFields - User old data %o", userData);
-  return userId;
+  return userId || "Unknown";
 }
 
 /**
@@ -76,19 +80,20 @@ function genuuid(req) {
  */
 const getUseruid = (incomingMsg) => {
   let shortUserName, shortRandMobile;
- 
-  try {
-    logger.debug("getUseruid -  UserName: %s Mobile: %s", incomingMsg.userName, incomingMsg.fromMobile);
-    shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
-    let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
-    shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-    return shortUserName+shortRandMobile;
-  } catch (err) {
-    logger.warn(err, `Generating default userId: `);
-    shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
-    let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
-    shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-    return shortUserName+shortRandMobile;
+  if(incomingMsg?.userName){
+    try {
+      logger.debug("getUseruid -  UserName: %s Mobile: %s", incomingMsg.userName, incomingMsg.fromMobile);
+      shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
+      let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
+      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+      return shortUserName+shortRandMobile;
+    } catch (err) {
+      logger.warn(err, `Generating default userId: `);
+      shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
+      let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
+      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+      return shortUserName+shortRandMobile;
+    }
   }
 }
 

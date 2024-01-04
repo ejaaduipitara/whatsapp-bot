@@ -52,7 +52,7 @@ const webhook = async (req, res) => {
     // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
     telemetry.logEvent(req, msg);
     try {
-        if(!isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
+        if(!isLangSelected || !isBotSelected || (msg?.input?.text?.toString()?.toLowerCase() === 'hi') || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
             logger.debug('msg.type %s', msg.type);
             if(!isLangSelected) { 
                 msg.input.text = '#';

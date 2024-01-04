@@ -21,26 +21,31 @@ const init = () => {
  */
 const getUseruid = (incomingMsg) => {
     let shortUserName, shortRandMobile;
-   
-    try {
-      logger.debug(incomingMsg.userName, incomingMsg.fromMobile);
-      shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
-      let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
-      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-      return shortUserName+shortRandMobile;
-    } catch (err) {
-      logger.warn(`Generating default userId: `);
-      shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
-      let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
-      shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
-      return shortUserName+shortRandMobile;
+
+    if(incomingMsg?.userName){
+      try {
+        logger.debug("getUserId: %s %s ", incomingMsg.userName, incomingMsg.fromMobile);
+        shortUserName = incomingMsg.userName.replace(/ /g, '').toLowerCase().substr(0,4);
+        let randMobile = (Number(incomingMsg.fromMobile)*mobileMult).toString(); 
+        shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+        return shortUserName+shortRandMobile;
+      } catch (err) {
+        logger.warn(`Generating default userId: `);
+        shortUserName = sampleUserName.replace(/ /g, '').toLowerCase().substr(0,4);
+        let randMobile = (Number(sampleMobile)*mobileMult).toString(); 
+        shortRandMobile = randMobile.substring(randMobile.length-4, randMobile.length);
+        return shortUserName+shortRandMobile;
+      }
     }
+    
 }
 
 const createSession = async (req, incomingMsg) => {
   // logger.info("req session:", req.session);
   // let uid = req?.session?.userId || deafultSession.userId;
   let uid = getUseruid(incomingMsg);
+  if(!uid) return;
+  
   // let userSess = await database.getData(uid);
   let userSess = await UserSqr.findByPk(uid);
   logger.debug("User Session %o", userSess);
