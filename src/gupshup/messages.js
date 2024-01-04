@@ -125,7 +125,7 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
   body = decorateWAMessage(body, incomingMsg);
-  logger.debug('⭆ sendMessage: %o', body);
+  logger.debug('⭆ sendMessage: %o', JSON.stringify(body));
   let data = qs.stringify(body);
   
   try {
@@ -177,10 +177,9 @@ const decorateWAMessage = (body, incomingMsg) => {
 const sendTestMessage = async () => {
   let data = qs.stringify({
     'channel': 'whatsapp',
-    'source': '917834811114',
-    'destination': '919964300623',
+    'source': WA_PROVIDER_NUMBER,
     'message': '{\n   "type":"text",\n   "text":"Hello user, how are you?"\n}',
-    'src.name': 'TestDJP' 
+    'src.name': WA_PROVIDER_APPNAME
   });
   let config = {
     method: 'post',
@@ -189,7 +188,7 @@ const sendTestMessage = async () => {
     headers: { 
       'Cache-Control': 'no-cache', 
       'Content-Type': 'application/x-www-form-urlencoded', 
-      'apiKey': 'wkwzvw6yducqvbebadi13qnouc88zdbd', 
+      'apiKey': WA_PROVIDER_TOKEN, 
       'cache-control': 'no-cache'
     },
     data : data
@@ -197,7 +196,8 @@ const sendTestMessage = async () => {
   
   axios.request(config)
   .then((response) => {
-    logger.info(JSON.stringify(response.data));
+    logger.info("API success");
+    logger.debug(JSON.stringify(response.data));
   })
   .catch((error) => {
     logger.error(error);

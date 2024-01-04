@@ -29,7 +29,9 @@ class InBoundGupshup extends InBound {
 
     constructor(reqBody) {
         super(reqBody);
+        logger.debug("InBoundGupshup - input reqBody: %o", reqBody);
         let payload = reqBody?.payload;
+        if(reqBody?.type != 'message') return; 
         this.id = payload.id;
         this.timestamp = reqBody.timestamp,
         this.fromMobile = payload?.sender?.phone;
@@ -37,7 +39,7 @@ class InBoundGupshup extends InBound {
         this.type = payload?.type;
         this.input = this.getInput(reqBody?.payload?.payload, payload.type);
         this.userId = this.getUseruid();
-        logger.debug("InBound converted object: %o", this);
+        logger.info("InBound converted object: %o", this);
     }
 
     getInput(payload, inputType) {
@@ -57,7 +59,7 @@ class InBoundGupshup extends InBound {
                 inputObj.context = {format: payload.contentType};
                 break;
             default: 
-                inputObj.text = payload.text;
+                inputObj.text = payload?.text;
         }
         return inputObj;
     }

@@ -36,27 +36,21 @@ let telemetry = new telemetryService();
  * @returns {object} - Telemetry data object containing context, object, and edata.
  */
 
-telemetryService.prototype.createData  = (req,eventType, msg) => {
+telemetryService.prototype.createData  = (req, eventType, msg) => {
+  logger.info("Telemetry CreateData - \nIncomingMsg: %o", msg)
   let isLangSelection = session.getUserLanguage(req, msg);
   let isBotSelection = session.getUserBot(req, msg);
-  console.log('checkSessionData',isLangSelection,isBotSelection)
+  
   const context = {
     env: 'dev',
     cdata: [ {id: isLangSelection || 'en', type:'Language' },{id: isBotSelection || 'bot_1', type: 'Bot' }], //currently hardcoded
-    sid: (msg?.fromMobile) * 12345,
-    did: (msg?.fromMobile) * 12345,
+    sid: msg?.id,
+    did: msg?.id,
     pdata: {id:`${APP_ENV}.${APP_NAME}.whatsapp`,pid:"whatsapp-bot",ver:"1.0"}
   };
   const actor = { 
-    id: (msg?.fromMobile) * 12345,
-     type: 'User'
-     };
-
-  const object =  {
-    id: (msg?.fromMobile) * 12345,
-    type: 'Whatsapp',
-    ver: '1.0',
-    rollup: {},
+    id: msg?.userId,
+    type: 'User'
   };
 
   const edata = {};
@@ -65,7 +59,7 @@ telemetryService.prototype.createData  = (req,eventType, msg) => {
     edata.type = 'api_call';
     edata.level = 'INFO';
     edata.message = 'Success';
-    edata.params = [{ mesId: msg?.id }, { mesType:msg?.type },{msgInput: msg?.input?.text || ''}];
+    edata.params = [{ mesId: msg?.id }, { mesType:msg?.type },{msgInput: msg?.input?.text || msg?.input?.audio|| ''}];
   }
   else if(eventType === 'start') {
     edata.type = 'session'
@@ -73,7 +67,7 @@ telemetryService.prototype.createData  = (req,eventType, msg) => {
     edata.duration = 1;
   }
 
-  return { context, object, edata, actor};
+  return { context, edata, actor};
 };
 
 /**
@@ -98,8 +92,8 @@ telemetryService.prototype.initialize = function() {
  * @param {Object} msg - The message object.
  */
 telemetryService.prototype.startEvent = function(req,msg) {
-  let StartData = telemetry.createData(req, 'start',msg);
-  logger.debug("Telemetry start: ", StartData);
+  let StartData = telemetry.createData(req, 'start', msg);
+  logger.debug("Telemetry start: %o", StartData);
   telemetry.start(StartData);
 }
 
@@ -130,7 +124,7 @@ function SyncManager() {
    * @param {any} event - Event data to dispatch.
    */
   this.dispatch = function (event) {
-    console.log('dispacher', JSON.stringify(event));
+    logger.info('dispacher: %o', JSON.stringify(event));
     sendTelemetry('req', [event], ''); // Dispatch telemetry event
   };
 }
@@ -206,27 +200,27 @@ function sendTelemetry(req, eventsData, callback) {
 
   // Prepare telemetry data request body
   var data = prepareTelemetryRequestBody(req, eventsData);
-  console.log('TELEMETRY_URL',TELEMETRY_URL,TELEMETRY_AUTH_TOKEN)
   // Set up the configuration for the axios request
   var axiosConfig = {
     method: 'POST',
     url: TELEMETRY_URL,
     headers: {
       'Content-Type': 'application/json',
+      'X-Source': "whatsapp",
       'Authorization': `Bearer ${ TELEMETRY_AUTH_TOKEN}`
     },
     data: data // The telemetry data to send
   };
-  console.log('response', axiosConfig)
+  logger.debug('Send Telemetry data: %o', axiosConfig);
   // Perform the telemetry POST request using axios
   axios(axiosConfig)
     .then(response => {
       // Log the response data if successful
-      console.log('Telemetry request successful:', response.data);
+      logger.info('Telemetry request successful:');
     })
     .catch(error => {
       // Log an error if the request fails
-      console.error('Telemetry request failed:', error);
+      logger.error(error, 'Telemetry request failed:');
     });
 }
 

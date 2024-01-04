@@ -1,14 +1,21 @@
 "use strict";
 const express = require("express");
-require('dotenv').config();
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+// console.log("envFile path", envFile);
+const dotenv = require('dotenv').config({ path: envFile });
+// console.log(dotenv);
 const http = require('http')
 const body_parser = require("body-parser");
 const session = require('./session');  // Import session module
 const language = require("./language");
 // const netcoreRoutes = require("./netcore/routes");
 const gupshupRoutes = require("./gupshup/routes");
+const gupshupServ = require("./gupshup/service");
 const cookieParser = require("cookie-parser");
 const loggerPino = require("./logger");
+const appConfig = require("./config");
+
+
 
 const app = express(); // creates express http server
 // app.use(cors());
@@ -28,9 +35,23 @@ app.listen(port, () => loggerPino.logger.info("webhook is listening port:", port
 // Used for Gupsgup whatsapp integration
 app.use("/gupshup", gupshupRoutes);
 
+/**
+ * Optional webhook for generic use case
+ */
+app.use("/webhook", (req, res) => {
+  if(req.body.type === "message") {
+    loggerPino.logger.debug("/webhook: ", JSON.stringify(req.body));
+    gupshupServ.webhook(req, res);
+  } else {
+    // res.redirect("gupshup/webhook");
+    loggerPino.logger.debug("/webhook: Other event !=message");
+    res.sendStatus(200);
+  }
+});
+
 // For Health check
 app.get("/health", (req, res) => {
-  res.send("Bot is running");
+  res.send(`${appConfig.name} is running.. \n v${appConfig.version}`);
 });
 
 app.get("/", function (req, res) {

@@ -1,10 +1,9 @@
-const express = require("express");
-const axios = require("axios");
 const userSession = require("../session");
 const messages = require('./messages');
 const inBoundGP = require('./InBound');
 const telemetryService = require('../telemetryService');
 const { logger } = require("../logger");
+const appConfig = require("../config");
 
 let counter = 0;
 var isLangSelected, isBotSelected;
@@ -18,25 +17,26 @@ const webhook = async (req, res) => {
      // To avoid other events coming from webhook of service provider
     // We will allow only user message events and not system geterated(Service provider) events
     if(!msg){
-        logger.info("XXX no message", msg);
+        logger.info("XXXX no message", msg);
         res.sendStatus(402);
         return;
     } 
-
     logger.debug("Request session: %o", req.session);
 
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
-    let oldMsgTs = userSession.getLatestMessageTimestamp(req, res);
-    logger.info("msg.timestamp: %s", msg.timestamp);
+    let userSess = await userSession.createSession(req, msg);
+
+    let oldMsgTs = userSess?.lastestMsgTimestamp; //userSession.getLatestMessageTimestamp(req, res);
+    logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs === msg.timestamp) {
-    //   req.send("Request is already recieved");
+      logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
       return;
     }
 
     logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
-    let userSess = await userSession.createSession(req, msg);
+    // let userSess = await userSession.createSession(req, msg);
     logger.info("Webhook - createSession resp: \n%o", userSess)
     let isNewUser = req.session.isNewUser;
     if(userSess) {
@@ -59,10 +59,10 @@ const webhook = async (req, res) => {
             } else if(!isBotSelected) {
                 msg.input.text = '*';
             }
-            menuSelection(req, msg);
-            res.sendStatus(200);
-        } else {
+            await menuSelection(req, msg);
+            if(appConfig.isLocalMode) res.sendStatus(200);
             // existing user & converstaion is happening
+        } else {
             counter++;
             logger.info('User query '+ counter);
             if(msg?.type == "button_reply") {
@@ -76,7 +76,7 @@ const webhook = async (req, res) => {
             } else {
                 await messages.sendBotResponse(req, msg);
             }
-            res.sendStatus(200);
+            if(appConfig.isLocalMode) res.sendStatus(200);
         }
     } catch (error) {
         logger.error(error, "Webhook error:");
@@ -95,10 +95,8 @@ const menuSelection = (req, msg) => {
     } else if (msg?.input?.text === '#') {
         // userSession.clearSession(req);
         sendLanguageSelection(req, msg);
-        // res.sendStatus(200);
     } else if ( msg?.input?.text === '*') {
         sendBotSelection(req, msg);
-        // res.sendStatus(200);
     }  
 }
 
@@ -123,7 +121,7 @@ const sendBotWelcomeMsg = (req, msg) => {
 
 // For Health check
 const test = (req, res) => {
-    res.status(200).send('Gupshup service API testing..');
+    res.status(200).send('Gupshup service Aenv testing..');
 };
 
 // To test Netcore webhook

@@ -5,7 +5,7 @@
             "msgid": "lang",
             "content": {
                 "type": "text",
-                "header": "Welcome to e-Jaadhu Pitaraa",
+                "header": "Welcome to My Jaadui Pitara",
                 "text": "Namaste 🙏 ",
                 "caption": "Please select a Language to proceed"
             },
@@ -29,8 +29,8 @@
             "msgid": "bot",
             "content": {
                 "type": "text",
-                "header": "e-Jaadui Pitara",
-                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n- Please select Story Sakhi for creating your own story \n- Please select Parent Sakhi for getting suggestions of activities that you can engage with your children at home \n- Please select Teacher Sakhi for getting suggestions of activities that you can engage with your children at schoo ",
+                "header": "My Jaadui Pitara",
+                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n- Please select Story Sakhi for creating your own story \n- Please select Parent Sakhi for getting suggestions of activities that you can engage with your children at home \n- Please select Teacher Sakhi for getting suggestions of activities that you can engage with your children at school",
                 "caption": "Please select below option to proceed"
             },
             "options": [
@@ -79,7 +79,7 @@
     "loading_message": {
         "message": {
             "type": "text",
-            "text": "Preparing response! Please wait!!"
+            "text": "Please wait, crafting response. It might take upto a minute."
         }
     },
     "bot_answer_text": {

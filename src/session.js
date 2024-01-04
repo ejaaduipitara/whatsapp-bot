@@ -64,7 +64,7 @@ const createSession = async (req, incomingMsg) => {
     return  ;
   } else {
     UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
-      logger.info("UserModel Lang Save Success %o", resp);
+      logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
     });
     logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
     // userSess.data = JSON.parse(userSess);
@@ -104,7 +104,7 @@ const setUserLanguage = (req, msg) => {
         // UserModel.update({[sessionLangKey]: selLang}, {userId: msg.userId});
         
         UserSqr.update({[sessionLangKey]: selLang}, {where: {userId: req.sessionID}}).then(resp => {
-            logger.info("UserModel Lang Save Success %o", resp);
+            logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
         });
         req.session[sessionLangKey] = selLang;
         deafultSession[sessionLangKey] = selLang;
@@ -178,7 +178,7 @@ const getSession = (req, msg) => {
 }
 
 const getLatestMessageTimestamp = (req, res) => {
-  logger.debug("Session ts:", deafultSession[sessionlatestMsgTimestamp]);
+  logger.debug("Session ts: %s" , deafultSession[sessionlatestMsgTimestamp]);
   return deafultSession[sessionlatestMsgTimestamp];
 }
 
