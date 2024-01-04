@@ -33,12 +33,12 @@ app.listen(port, () => loggerPino.logger.info("webhook is listening port:", port
 // app.use("/netcore", netcoreRoutes);
 
 // Used for Gupsgup whatsapp integration
-app.use("/gupshup", gupshupRoutes);
+// app.use("/gupshup", gupshupRoutes);
 
 /**
  * Optional webhook for generic use case
  */
-app.use("/webhook", (req, res) => {
+app.post("/gupshup/webhook", (req, res) => {
   if(req.body.type === "message") {
     loggerPino.logger.debug("/webhook: ", JSON.stringify(req.body));
     gupshupServ.webhook(req, res);
