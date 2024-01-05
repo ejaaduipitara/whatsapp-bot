@@ -197,7 +197,7 @@ const sendTestMessage = async () => {
   axios.request(config)
   .then((response) => {
     logger.info("API success");
-    logger.debug(JSON.stringify(response.data));
+    // logger.debug(JSON.stringify(response.data));
   })
   .catch((error) => {
     logger.error(error);
