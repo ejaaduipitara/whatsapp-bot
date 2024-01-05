@@ -96,9 +96,11 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
 
-      let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
-      audioMessage.message.url = queryResponse?.output?.audio;
-      await sendMessage(audioMessage, msg);
+      if(queryResponse?.output?.audio) {
+        let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
+        audioMessage.message.url = queryResponse?.output?.audio;
+        await sendMessage(audioMessage, msg);
+      }
     })
     .catch(err => {
       logger.error(err, 'Error in fetchQueryRespone');
