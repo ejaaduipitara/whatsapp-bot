@@ -7,7 +7,6 @@ const appConfig = require("../config");
 const { UserSqr } = require("../database/Models");
 
 let counter = 0;
-var isLangSelected, isBotSelected;
 let telemetry = new telemetryService();
 telemetry.initialize();
 
@@ -15,18 +14,18 @@ const webhook = async (req, res) => {
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
     let msg = incomingMsg;
     
-     // To avoid other events coming from webhook of service provider
+    // To avoid other events coming from webhook of service provider
     // We will allow only user message events and not system geterated(Service provider) events
     if(!msg){
         logger.info("XXXX no message", msg);
         res.sendStatus(402);
         return;
-    } 
-    // logger.debug("Request session: %o", req.session);
+    }
 
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
     let userSess = await UserSqr.findByPk(msg?.userId);
+    console.log(userSess);
     let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {
@@ -39,9 +38,11 @@ const webhook = async (req, res) => {
     logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
-    logger.info("Webhook - createSession resp: \n%o", userSess)
+    logger.info("Webhook - createSession resp: \n%o", userSess);
     let isNewUser = userSess ? false : true;
+    let isLangSelected, isBotSelected;
     if(userSess) {
+        logger.debug("isLangSelected: %s, isBotSelected: %s", userSess.lang, userSess.bot);
         isLangSelected = userSess.lang;
         isBotSelected = userSess.bot;
     }
@@ -95,7 +96,7 @@ const isAlreadyServed = (curMsgTs, oldMsgTs) => {
     } else {
         alreadyServed = true;
     }
-    logger.info("Message is already served %s", alreadyServed);
+    logger.info("Message is already served %s", alreadyServed.toString());
     return alreadyServed;
 }
 

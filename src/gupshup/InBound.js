@@ -39,7 +39,7 @@ class InBoundGupshup extends InBound {
         this.type = payload?.type;
         this.input = this.getInput(reqBody?.payload?.payload, payload.type);
         this.userId = this.getUseruid();
-        logger.info("InBound converted object: %o", this);
+        logger.info("InBound converted object: \n%o", this);
     }
 
     getInput(payload, inputType) {

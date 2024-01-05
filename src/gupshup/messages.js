@@ -101,7 +101,7 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
       await sendMessage(audioMessage, msg);
     })
     .catch(err => {
-      logger.error('Error in fetchQueryRespone:', err);
+      logger.error(err, 'Error in fetchQueryRespone');
     });
 }
 
@@ -125,7 +125,7 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
   body = decorateWAMessage(body, incomingMsg);
-  logger.debug('⭆ sendMessage: %o', JSON.stringify(body));
+  logger.info('⭆ sendMessage: \n%o', JSON.stringify(body));
   let data = qs.stringify(body);
   
   try {
