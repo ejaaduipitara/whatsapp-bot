@@ -4,7 +4,6 @@ var SequelizeStore = require("connect-session-sequelize")(session.Store);
 // const { Client } = require('pg');
 const { logger } = require('../logger');
 const { Sequelize } = require('sequelize');
-const { SessionModel, UserModel } = require('./Models');
 const { InBoundGupshup } = require('../gupshup/InBound');
 const POSTGRES_URL = process.env.POSTGRES_URL;
 const oneDay = 1000 * 60 * 60 * 24;
@@ -12,8 +11,6 @@ const sequelize = new Sequelize(POSTGRES_URL);
 const mobileMult = 2013;
 var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
-// const Session = sequelize.define("Session", SessionModel);
-// const User = sequelize.define("User", UserModel);
 
 const Session = sequelize.define("Session", {
   sid: {
@@ -26,7 +23,7 @@ const Session = sequelize.define("Session", {
 });
 
 function extendDefaultFields(defaults, session) {
-  console.log(defaults, session);
+  // console.log(defaults, session);
   return {
     data: defaults.data,
     expires: defaults.expires,

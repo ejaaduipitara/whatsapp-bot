@@ -97,6 +97,7 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
       await sendMessage(bodyMessage, msg);
 
       if(queryResponse?.output?.audio) {
+        logger.info('Bot response audio: %s', queryResponse?.output?.audio);
         let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
         audioMessage.message.url = queryResponse?.output?.audio;
         await sendMessage(audioMessage, msg);
@@ -126,8 +127,8 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  */
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
-  logger.info('⭆ sendMessage: \n%o', incomingMsg);
   body = decorateWAMessage(body, incomingMsg);
+  logger.info('⭆ sendMessage: \n%o', body);
   let data = qs.stringify(body);
   
   try {
@@ -242,9 +243,9 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(userBot != 'bot_1') {
     botUrl = ACTIVITY_SAKHI_URL ;
     data.input.audienceType = audienceMap[userBot];
+    data.output = {"format": "text"};
   } else {
     botUrl = STORY_SAKHI_UTL;
-    data.output = {"format": "text"};
   }
 
   // Updating text/audio property to the input request
@@ -265,7 +266,7 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  logger.debug('axios', axiosConfig);
+  logger.debug('axios %o', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);

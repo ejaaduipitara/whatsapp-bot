@@ -25,7 +25,6 @@ const webhook = async (req, res) => {
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
     let userSess = await UserSqr.findByPk(msg?.userId);
-    console.log(userSess);
     let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {

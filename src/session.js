@@ -1,4 +1,4 @@
-const { UserModel, User, UserSqr } = require("./database/Models");
+const { UserSqr } = require("./database/Models");
 const database = require("./database/database");
 const { logger } = require("./logger");
 const sessionLangKey = "lang";
