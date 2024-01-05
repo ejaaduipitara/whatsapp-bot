@@ -231,12 +231,8 @@ const setMessageTo = (body, incomingMsg) => {
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   // logger.debug("⭆ fetchQueryRespone", msg);
   let data = {
-    input: {
-      "language": userLang
-    },
-    output: {
-      "format": "audio"
-    }
+    input: {"language": userLang },
+    output: {"format": "audio"}
   };
 
   // Based on Bot selection add the properties
@@ -246,6 +242,7 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
     data.input.audienceType = audienceMap[userBot];
   } else {
     botUrl = STORY_SAKHI_UTL;
+    data.output = {"format": "text"};
   }
 
   // Updating text/audio property to the input request
@@ -254,19 +251,19 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   }
 
   var axiosConfig = {
-    method: 'POST',
-    url: botUrl,
+    method: 'POST', 
+    url: botUrl, 
     headers: {
       'Content-Type': 'application/json'
-    },
-    data: data
+    }, 
+    data: data 
   };
 
   // Add Authorization token if it is defined
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  // logger.debug('axios', axiosConfig);
+  logger.debug('axios', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);

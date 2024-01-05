@@ -118,8 +118,8 @@ const getMessage = (req) => {
 const sendMessage = async (req, res, body) => {
     try {
         const response = await axios.post(
-            `https://graph.facebook.com/${WHATSAPP_VERSION}/${WHATSAPP_PHONEID}/messages`,
-            body,
+            `https://graph.facebook.com/${WHATSAPP_VERSION}/${WHATSAPP_PHONEID}/messages`, 
+            body, 
             {
                 headers: {
                     Authorization: `Bearer ${WHATSAPP_TOKEN}`,
