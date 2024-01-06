@@ -10,7 +10,7 @@ var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
 
 const init = () => {
-  logger.info("Session init called.");
+  // logger.info("Session init called.");
   return database.init();
 }
 
@@ -41,7 +41,7 @@ const getUseruid = (incomingMsg) => {
 }
 
 const createSession = async (req, incomingMsg) => {
-  // logger.info("req session:", req.session);
+  // // logger.info("req session:", req.session);
   // let uid = req?.session?.userId || deafultSession.userId;
   let uid = getUseruid(incomingMsg);
   if(!uid) return;
@@ -59,23 +59,25 @@ const createSession = async (req, incomingMsg) => {
     req.session.userId = uid;
     req.session.isNewUser = true;
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
-    // logger.info("req session:", req);
-    logger.info(`✅ new session created: \n req.sessionID: %s \n Session: %o`, req.sessionID, req.session);
+    // // logger.info("req session:", req);
+    // logger.info(`✅ new session created: \n req.sessionID: %s \n Session: %o`, req.sessionID, req.session);
     // logger.debug("User Session", userSess);
     return userSess;
   } else {
     await UserSqr.update({ [sessionlatestMsgTimestamp]: incomingMsg?.timestamp }, {where: {userId: req.sessionID}}).then(resp => {
-      logger.info("UserModel update Success %o", JSON.stringify(resp));
+      // logger.info("UserModel update Success %o", JSON.stringify(resp));
     });
-    logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
+    // logger.info(`✓ session already exist - DB resp \n req.sessionID: %s \n %o`, req.sessionID, userSess);
     
     req.session.userId = userSess.userId;
     req.session.isNewUser = false;
     req.session[sessionLangKey] = userSess[sessionLangKey];
     req.session[sessionBotKey] = userSess[sessionBotKey];
     req.session[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
+
+    userSess[sessionlatestMsgTimestamp] = incomingMsg?.timestamp;
     
-    logger.info(`Updated session data: \n %o`, req.session);
+    // logger.info(`Updated session data: \n %o`, req.session);
     return userSess;
   }
 }
@@ -84,25 +86,25 @@ const setUserLanguage = (req, msg) => {
     logger.debug("⭆ setUserLanguage");
     
     let userReplyBtnId = msg?.input?.context?.id;
-    logger.info(`userReplyBtnId:${userReplyBtnId}, btn_reply: ${msg?.input}`);
+    // logger.info(`userReplyBtnId:${userReplyBtnId}, btn_reply: ${msg?.input}`);
     let selLang =  userReplyBtnId && userReplyBtnId.includes(sessionLangKey) && userReplyBtnId?.split('__')[1]
-    // logger.info('User selected Language: ', selLang)
+    // // logger.info('User selected Language: ', selLang)
 
     if (selLang) {
         // If not present, set the default value from the incoming message
         // UserModel.update({[sessionLangKey]: selLang}, {userId: msg.userId});
         
         UserSqr.update({[sessionLangKey]: selLang}, {where: {userId: req.sessionID}}).then(resp => {
-            logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
+            // logger.info("UserModel Lang Save Success %o", JSON.stringify(resp));
         });
         req.session[sessionLangKey] = selLang;
         // deafultSession[sessionLangKey] = selLang;
-        logger.info(`✅ Language set ${selLang}: %o`, req.session);
+        // logger.info(`✅ Language set ${selLang}: %o`, req.session);
     } else {
         logger.debug('✓ User selected lang: %o', req.session[sessionLangKey]);
         // if (id && languageSelection !== id && id.includes('lan')) {
         //     req.session.languageSelection = id;
-        //     logger.info('Updated languageSelection:', id);
+        //     // logger.info('Updated languageSelection:', id);
         // }
     }
     return selLang;
@@ -124,9 +126,9 @@ const setUserBot = (req, msg) => {
       req.session[sessionBotKey] = botId;
       // deafultSession[sessionBotKey] = botId;
       UserSqr.update({[sessionBotKey]: botId}, {where: {userId: req.sessionID}}).then(resp => {
-          logger.info("UserModel Bot Save Success %o", resp);
+          // logger.info("UserModel Bot Save Success %o", resp);
       });
-      logger.info(`✅ User selected bot ${botId} req session %o`, req.session );
+      // logger.info(`✅ User selected bot ${botId} req session %o`, req.session );
   } else {
       logger.debug('✓ User selected bot: %s', req.session[sessionBotKey]);
   }

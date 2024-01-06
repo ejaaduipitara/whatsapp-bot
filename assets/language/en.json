@@ -12,11 +12,13 @@
             "options": [
                 {
                     "type": "text",
+                    "id": "lang",
                     "title": "English",
                     "postbackText": "lang__en"
                 },
                 {
                     "type": "text",
+                    "id": "lang",
                     "title": "हिंदी",
                     "postbackText": "lang__hi"
                 }
@@ -36,16 +38,19 @@
             "options": [
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Story Sakhi",
                     "postbackText": "bot__bot_1"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Parent Sakhi",
                     "postbackText": "bot__bot_2"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Teacher Sakhi",
                     "postbackText": "bot__bot_3"
                 }
@@ -85,7 +90,7 @@
     "bot_answer_text": {
         "message": {
             "type": "text",
-            "text": " "
+            "text": ""
         }
     },
     "bot_answer_audio": {

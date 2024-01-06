@@ -66,7 +66,7 @@ function genuuid(req) {
   }
   
   // let userData = getData(userId);
-  // logger.info("extendDefaultFields - User old data %o", userData);
+  // // logger.info("extendDefaultFields - User old data %o", userData);
   return userId || "Unknown";
 }
 
@@ -102,7 +102,7 @@ const getUseruid = (incomingMsg) => {
 const getData = async (userId) => {
   try {
     let userSess = await Session.findOne({where: {sid: userId} });
-    logger.info("User session already exist: %o ", userSess)
+    // logger.info("User session already exist: %o ", userSess)
     return userSess;
   } catch (error) {
     logger.error(error, "Database query - Get user session failed %s", userId);

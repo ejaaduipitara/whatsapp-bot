@@ -216,7 +216,7 @@ function sendTelemetry(req, eventsData, callback) {
   axios(axiosConfig)
     .then(response => {
       // Log the response data if successful
-      logger.info('Telemetry request successful:');
+      // logger.info('Telemetry request successful:');
     })
     .catch(error => {
       // Log an error if the request fails

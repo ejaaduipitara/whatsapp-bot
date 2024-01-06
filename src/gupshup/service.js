@@ -26,15 +26,15 @@ const webhook = async (req, res) => {
     // Has to find the roor cause, why the same request is coming multiple times
     let userSess = await UserSqr.findByPk(msg?.userId);
     let oldMsgTs = userSess?.lastestMsgTimestamp;
+    logger.debug("Webhook - RawData: %o", msg.rawData);
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {
-        logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
+        logger.warn("Request is already served.");
         res.sendStatus(403);
         return;
     }
     
     userSess = await userSession.createSession(req, msg);
-    logger.debug("Webhook - RawData: %o", msg.rawData);
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
     logger.info("Webhook - createSession resp: \n%o", userSess);
@@ -46,8 +46,8 @@ const webhook = async (req, res) => {
         isBotSelected = userSess.bot;
     }
     
-    logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
-    logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
+    // logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
+    // logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     telemetry.logEvent(req, msg);
     try {
         // (msg?.input?.text?.toString()?.toLowerCase() === 'hi') 
@@ -63,7 +63,7 @@ const webhook = async (req, res) => {
             // existing user & converstaion is happening
         } else {
             counter++;
-            logger.info('User query '+ counter);
+            // logger.info('User query '+ counter);
             if(msg?.type == "button_reply") {
                 let selectionType = msg?.input?.context?.type;
                 logger.debug('msg.type %s', selectionType);
@@ -95,14 +95,14 @@ const isAlreadyServed = (curMsgTs, oldMsgTs) => {
     } else {
         alreadyServed = true;
     }
-    logger.info("Message is already served %s", alreadyServed.toString());
+    // logger.info("Message is already served %s", alreadyServed.toString());
     return alreadyServed;
 }
 
 const menuSelection = (req, msg) => {
     if(msg?.type == "button_reply") {
         let selectionType = msg?.input?.context?.type;
-        logger.debug('msg.type %s', selectionType);
+        // logger.debug('msg.type %s', selectionType);
         switch(selectionType) {
             case 'lang': sendBotSelection(req, msg); break;
             case 'bot': sendBotWelcomeMsg(req, msg); break;
@@ -117,20 +117,20 @@ const menuSelection = (req, msg) => {
 }
 
 const sendLanguageSelection = (req, msg) => {
-    logger.info("👨 First time user");
+    // logger.info("👨 First time user");
     telemetry.startEvent(req, msg);
     messages.sendLangSelection(msg);
 }
 
 const sendBotSelection = (req, msg) => {
-    logger.info("📚 Language selected");
+    // logger.info("📚 Language selected");
     // userSession.clearSessionBot(req);
     userSession.setUserLanguage(req, msg);
     messages.sendBotSelection(req, msg);
 }
 
 const sendBotWelcomeMsg = (req, msg) => {
-    logger.info("🤖 Bot selected");
+    // logger.info("🤖 Bot selected");
     userSession.setUserBot(req, msg);
     messages.sendBotWelcomeMsg(req, msg);
 }
@@ -144,7 +144,7 @@ const test = (req, res) => {
 const testWebhook = (req, res) => {
 
     let result =  new inBoundGP.InBoundGupshup(req.body);
-    // logger.info("Webhook test: ", JSON.stringify(req.body));
+    // // logger.info("Webhook test: ", JSON.stringify(req.body));
      res.send(result);
   };
 

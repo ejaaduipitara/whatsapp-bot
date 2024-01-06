@@ -92,12 +92,14 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
   // logger.debug('msgcheck', JSON.stringify(msg))
   await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
+      logger.info("⭆ sendBotAnswer - Text");
       let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
 
       if(queryResponse?.output?.audio) {
-        logger.info('Bot response audio: %s', queryResponse?.output?.audio);
+        logger.info("⭆ sendBotAnswer - Audio");
+        // logger.info('Bot response audio: %s', queryResponse?.output?.audio);
         let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
         audioMessage.message.url = queryResponse?.output?.audio;
         await sendMessage(audioMessage, msg);
@@ -154,7 +156,7 @@ const sendMessage = async (body, msg) => {
       logger.error(error, "WhatsApp message failed..");
     })
   } catch (error) {
-    logger.error(error, "webhook => error occurred with status code: %o");
+    logger.error(error, "sendMessage => Whatsapp message failed");
   } 
 }
 
@@ -203,7 +205,7 @@ const sendTestMessage = async () => {
     // logger.debug(JSON.stringify(response.data));
   })
   .catch((error) => {
-    logger.error(error);
+    logger.error(error, "Bot API failed");
   });
 }
 
@@ -214,7 +216,7 @@ const sendTestMessage = async () => {
  * @returns 
  */
 const setMessageTo = (body, incomingMsg) => {
-  // logger.info('⭆ sendMessage', incomingMsg);
+  // // logger.info('⭆ sendMessage', incomingMsg);
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
   } else {
@@ -266,14 +268,14 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  logger.debug('axios %o', axiosConfig);
+  logger.debug('Bot query -> axios \n%o', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
-    // logger.info('Telemetry request successful:', response.data);
+    logger.info('Bot API Succedd. response: \n%o', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
-    console.error('fetch response from bot failed:', error);
+    logger.error(error, "Bot API failed");
     throw error; // Throw an error to handle it wherever the function is called
   }
 };
