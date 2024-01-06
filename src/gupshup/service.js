@@ -65,7 +65,15 @@ const webhook = async (req, res) => {
             counter++;
             // logger.info('User query '+ counter);
             if(msg?.type == "button_reply") {
+                
                 let selectionType = msg?.input?.context?.type;
+
+                // TODO: Temp solution for other languages, button_reply is got giving the right "id"
+                let btnPostBackText = msg?.input?.context?.id;
+                if(btnPostBackText && btnPostBackText.includes("bot__")) {
+                    selectionType = "bot";
+                }
+                
                 logger.debug('msg.type %s', selectionType);
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
