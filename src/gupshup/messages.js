@@ -7,7 +7,7 @@ const telemetryService = require("../telemetryService");
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
-const STORY_SAKHI_UTL = process.env.STORY_SAKHI_UTL;
+const STORY_SAKHI_URL = process.env.STORY_SAKHI_URL;
 const BOT_API_TOKEN = process.env.BOT_API_TOKEN;
 const WA_PROVIDER_NUMBER = process.env.WA_PROVIDER_NUMBER;
 const WA_PROVIDER_APPNAME = process.env.WA_PROVIDER_APPNAME;
@@ -247,7 +247,7 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
     data.input.audienceType = audienceMap[userBot];
     data.output = {"format": "text"};
   } else {
-    botUrl = STORY_SAKHI_UTL;
+    botUrl = STORY_SAKHI_URL;
   }
 
   // Updating text/audio property to the input request
