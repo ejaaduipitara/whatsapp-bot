@@ -4,6 +4,7 @@ const axios = require("axios");
 const qs = require('qs');
 const { logger } = require("../logger");
 const telemetryService = require("../telemetryService");
+const { setTimeout } = require("timers/promises");
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
@@ -66,6 +67,7 @@ const sendBotResponse = async (req, msg) => {
 
   await sendBotLoadingMsg(req, msg, userLang, userBot);
   await sendBotAnswer(req, msg, userLang, userBot);
+  await setTimeout(3000);
   await sendBotReplyFooter(req, msg, userLang, userBot);
 }
 
@@ -90,13 +92,13 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendBotAnswer");
   // logger.debug('msgcheck', JSON.stringify(msg))
-  await fetchQueryRespone(req, msg, userLang, userBot)
+  let botResp = await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
       logger.info("⭆ sendBotAnswer - Text");
       let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
-
+      
       if(queryResponse?.output?.audio) {
         logger.info("⭆ sendBotAnswer - Audio");
         // logger.info('Bot response audio: %s', queryResponse?.output?.audio);
