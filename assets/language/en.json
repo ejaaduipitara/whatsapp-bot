@@ -14,34 +14,8 @@
       ],
     "lang_selection": {
         "message": {
-            "type": "quick_reply",
-            "msgid": "lang",
-            "content": {
-                "type": "text",
-                "header": "Welcome to My Jaadui Pitara",
-                "text": "Namaste 🙏 ",
-                "caption": "Please select a Language to proceed"
-            },
-            "options": [
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "English",
-                    "postbackText": "lang__en"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "हिंदी",
-                    "postbackText": "lang__hi"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "తెలుగు",
-                    "postbackText": "lang__te"
-                }
-            ]
+            "type":"text",
+            "text":"Welcome to My Jaadui Pitara \nNamaste 🙏 \n\nPlease enter the sequence number from the below list "
         }
     },
     "bot_selection": {
