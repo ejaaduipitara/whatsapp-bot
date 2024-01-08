@@ -25,8 +25,8 @@
                 {
                     "type": "text",
                     "id": "lang",
-                    "title": "ಕನ್ನಡ",
-                    "postbackText": "lang__ka"
+                    "title": "తెలుగు",
+                    "postbackText": "lang__te"
                 }
             ]
         }
