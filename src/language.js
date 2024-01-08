@@ -26,13 +26,20 @@ const init = () => {
 
 const getMessage = (language = defaultLang, botId, key) => {
   // // logger.info("⭆ getMessage: ", language, botId, key);
-  let msg = botId ? language_dict[language][botId][key] : language_dict[language][key]
-  let result
-  if(msg) {
-    result = JSON.parse(JSON.stringify(msg));
-  } else {
-    // logger.info(`❌ Object doesn't exist for ${language}.${botId}.${key}`);
+  let msg, result;
+  try {
+    msg = botId ? language_dict[language][botId][key] : language_dict[language][key];
+    if(msg) {
+      result = JSON.parse(JSON.stringify(msg));
+    }
+  } catch (error) {
+    logger.warn(`❌ Object doesn't exist for ${language}.${botId}.${key}`);
+
+    logger.info("Getting default lanauge (en) message for bot: %s", botId);
+    msg = botId ? language_dict[defaultLang][botId][key] : language_dict[defaultLang][key];
+    if(msg) result = JSON.parse(JSON.stringify(msg));
   }
+  
   // // logger.info("getMessage Output\n", msg);
   
   return result;
