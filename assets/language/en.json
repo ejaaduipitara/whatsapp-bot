@@ -15,7 +15,7 @@
     "lang_selection": {
         "message": {
             "type":"text",
-            "text":"Welcome to My Jaadui Pitara \nNamaste 🙏 \n\nPlease enter the sequence number from the below list "
+            "text":"Welcome to My Jaadui Pitara \nNamaste 🙏 \n\nPlease enter the number to select your language from the below list"
         }
     },
     "bot_selection": {
