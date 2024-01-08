@@ -14,18 +14,18 @@ const UserModel = {
     updatedAt: Sequelize.DATE
 }
 
-const SessionModel = {
-    sid: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-    },
-    userId: Sequelize.STRING,
-    expires: Sequelize.DATE,
-    data: Sequelize.TEXT
-}
+// const SessionModel = {
+//     sid: {
+//         type: Sequelize.STRING,
+//         primaryKey: true,
+//     },
+//     userId: Sequelize.STRING,
+//     expires: Sequelize.DATE,
+//     data: Sequelize.TEXT
+// }
 
 // const SessionSeq = sequelize.define("Session", SessionModel);
 const UserSqr = sequelize.define("User", UserModel);
 UserSqr.sync();
 
-module.exports = { UserModel, SessionModel, UserSqr }
+module.exports = { UserSqr }

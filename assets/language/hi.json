@@ -12,16 +12,19 @@
             "options": [
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "कहानी सखी",
                     "postbackText": "bot__bot_1"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "अभिभवक सखी",
                     "postbackText": "bot__bot_2"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "शिक्षक सखी",
                     "postbackText": "bot__bot_3"
                 }

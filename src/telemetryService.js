@@ -37,7 +37,7 @@ let telemetry = new telemetryService();
  */
 
 telemetryService.prototype.createData  = (req, eventType, msg) => {
-  logger.info("Telemetry CreateData - \nIncomingMsg: %o", msg)
+  // logger.debug("Telemetry CreateData - \nIncomingMsg: %o", msg)
   let isLangSelection = session.getUserLanguage(req, msg);
   let isBotSelection = session.getUserBot(req, msg);
   
@@ -93,7 +93,7 @@ telemetryService.prototype.initialize = function() {
  */
 telemetryService.prototype.startEvent = function(req,msg) {
   let StartData = telemetry.createData(req, 'start', msg);
-  logger.debug("Telemetry start: %o", StartData);
+  // logger.debug("Telemetry start: %o", StartData);
   telemetry.start(StartData);
 }
 
@@ -124,7 +124,7 @@ function SyncManager() {
    * @param {any} event - Event data to dispatch.
    */
   this.dispatch = function (event) {
-    logger.info('dispacher: %o', JSON.stringify(event));
+    // logger.debug('dispacher: %o', JSON.stringify(event));
     sendTelemetry('req', [event], ''); // Dispatch telemetry event
   };
 }
@@ -216,7 +216,7 @@ function sendTelemetry(req, eventsData, callback) {
   axios(axiosConfig)
     .then(response => {
       // Log the response data if successful
-      logger.info('Telemetry request successful:');
+      // logger.info('Telemetry request successful:');
     })
     .catch(error => {
       // Log an error if the request fails

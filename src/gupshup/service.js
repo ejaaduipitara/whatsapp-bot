@@ -8,7 +8,6 @@ const { UserSqr } = require("../database/Models");
 const { getLang } = require("../language");
 
 let counter = 0;
-var isLangSelected, isBotSelected;
 let telemetry = new telemetryService();
 telemetry.initialize();
 
@@ -16,42 +15,40 @@ const webhook = async (req, res) => {
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
     let msg = incomingMsg;
     
-     // To avoid other events coming from webhook of service provider
+    // To avoid other events coming from webhook of service provider
     // We will allow only user message events and not system geterated(Service provider) events
     if(!msg){
         logger.info("XXXX no message", msg);
         res.sendStatus(402);
         return;
-    } 
-    logger.debug("Request session: %o", req.session);
+    }
 
     // TODO: Temporary solution to avoid duplicate requests coming from webhook for the same user input
     // Has to find the roor cause, why the same request is coming multiple times
-    let userSess = await userSession.createSession(req, msg);
-
-    let oldMsgTs = userSess?.lastestMsgTimestamp; //userSession.getLatestMessageTimestamp(req, res);
-    logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
-    if(oldMsgTs === msg.timestamp) {
-      logger.error("Request is already served.  \nmsg: %o , \n DB timestamp: %s", msg, oldMsgTs);
-      return;
-    }
-
+    let userSess = await UserSqr.findByPk(msg?.userId);
+    let oldMsgTs = userSess?.lastestMsgTimestamp;
     logger.debug("Webhook - RawData: %o", msg.rawData);
+    logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
+    if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {
+        logger.warn("Request is already served.");
+        res.sendStatus(403);
+        return;
+    }
+    
+    userSess = await userSession.createSession(req, msg);
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
-    logger.info("Webhook - createSession resp: \n%o", userSess)
-    let isNewUser = req.session.isNewUser;
+    logger.info("Webhook - createSession resp: \n%o", userSess);
+    let isNewUser = userSess ? false : true;
+    let isLangSelected, isBotSelected;
     if(userSess) {
-        // isLangSelected = userSession.getUserLanguage(req, msg);
-        // isBotSelected = userSession.getUserBot(req, msg);
-    // // } else {
+        logger.debug("isLangSelected: %s, isBotSelected: %s", userSess.lang, userSess.bot);
         isLangSelected = userSess.lang;
         isBotSelected = userSess.bot;
     }
     
-    logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
-    logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
-    // WHATSAPP_TO = msg?.from || msg?.recipient_whatsapp;
+    // logger.debug(`\n req session: ${JSON.stringify(req.session)} `);
+    // logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     telemetry.logEvent(req, msg);
     try {
         var regex=/^[0-9]+$/; 
@@ -70,8 +67,9 @@ const webhook = async (req, res) => {
             // existing user & converstaion is happening
         } else {
             counter++;
-            logger.info('User query '+ counter);
+            // logger.info('User query '+ counter);
             if(msg?.type == "button_reply") {
+                
                 let selectionType = msg?.input?.context?.type;
 
                 // TODO: Temp solution for other languages, button_reply is got giving the right "id"
@@ -95,11 +93,28 @@ const webhook = async (req, res) => {
     }
 }
 
+/**
+ * To check the inComing message is already served & stored in the DB
+ * @param {miliseconds} curMsgTs 
+ * @param {miliseconds} oldMsgTs 
+ * @returns {boolean} alreadyServed
+ */
+const isAlreadyServed = (curMsgTs, oldMsgTs) => {
+    let alreadyServed = false;
+    if((curMsgTs>oldMsgTs)) {
+        alreadyServed = false;
+    } else {
+        alreadyServed = true;
+    }
+    // logger.info("Message is already served %s", alreadyServed.toString());
+    return alreadyServed;
+}
+
 const menuSelection = (req, msg) => {
     logger.info("Menu Selection of \n%o", msg);
     if(msg?.type == "button_reply") {
         let selectionType = msg?.input?.context?.type;
-        logger.debug('msg.type %s', selectionType);
+        // logger.debug('msg.type %s', selectionType);
         switch(selectionType) {
             case 'lang': sendBotSelection(req, msg); break;
             case 'bot': sendBotWelcomeMsg(req, msg); break;
@@ -130,14 +145,14 @@ const sendLanguageSelection = (req, msg) => {
 }
 
 const sendBotSelection = (req, msg) => {
-    logger.info("📚 Language selected");
+    // logger.info("📚 Language selected");
     // userSession.clearSessionBot(req);
     userSession.setUserLanguage(req, msg);
     messages.sendBotSelection(req, msg);
 }
 
 const sendBotWelcomeMsg = (req, msg) => {
-    logger.info("🤖 Bot selected");
+    // logger.info("🤖 Bot selected");
     userSession.setUserBot(req, msg);
     messages.sendBotWelcomeMsg(req, msg);
 }
@@ -151,7 +166,7 @@ const test = (req, res) => {
 const testWebhook = (req, res) => {
 
     let result =  new inBoundGP.InBoundGupshup(req.body);
-    // logger.info("Webhook test: ", JSON.stringify(req.body));
+    // // logger.info("Webhook test: ", JSON.stringify(req.body));
      res.send(result);
   };
 

@@ -27,20 +27,20 @@ language.init();
 
 // Sets server port and logs message on success
 let port = process.env.PORT || 3020;
-app.listen(port, () => loggerPino.logger.info("webhook is listening port:", port));
+app.listen(port, () => loggerPino.logger.info("webhook is listening port: %s", port));
 
 // Used for Netcore whatsapp integration
 // app.use("/netcore", netcoreRoutes);
 
 // Used for Gupsgup whatsapp integration
-app.use("/gupshup", gupshupRoutes);
+// app.use("/gupshup", gupshupRoutes);
 
 /**
  * Optional webhook for generic use case
  */
-app.use("/webhook", (req, res) => {
+app.post("/gupshup/webhook", (req, res) => {
   if(req.body.type === "message") {
-    loggerPino.logger.debug("/webhook: ", JSON.stringify(req.body));
+    // loggerPino.logger.debug("/webhook: \n%o ", JSON.stringify(req.body));
     gupshupServ.webhook(req, res);
   } else {
     // res.redirect("gupshup/webhook");
@@ -56,6 +56,6 @@ app.get("/health", (req, res) => {
 
 app.get("/", function (req, res) {
   // const ipAddress = req.socket.remoteAddress;
-  // logger.info("ipAddress: ", ipAddress);
+  // // logger.info("ipAddress: ", ipAddress);
   res.redirect("/health");
 });

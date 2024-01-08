@@ -14,8 +14,34 @@
       ],
     "lang_selection": {
         "message": {
-            "type":"text",
-            "text":"Welcome to My Jaadui Pitara \nNamaste 🙏 \n\nPlease enter the number to select your language from the below list "
+            "type": "quick_reply",
+            "msgid": "lang",
+            "content": {
+                "type": "text",
+                "header": "Welcome to My Jaadui Pitara",
+                "text": "Namaste 🙏 ",
+                "caption": "Please select a Language to proceed"
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "lang",
+                    "title": "English",
+                    "postbackText": "lang__en"
+                },
+                {
+                    "type": "text",
+                    "id": "lang",
+                    "title": "हिंदी",
+                    "postbackText": "lang__hi"
+                },
+                {
+                    "type": "text",
+                    "id": "lang",
+                    "title": "తెలుగు",
+                    "postbackText": "lang__te"
+                }
+            ]
         }
     },
     "bot_selection": {
@@ -31,16 +57,19 @@
             "options": [
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Story Sakhi",
                     "postbackText": "bot__bot_1"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Parent Sakhi",
                     "postbackText": "bot__bot_2"
                 },
                 {
                     "type": "text",
+                    "id": "bot",
                     "title": "Teacher Sakhi",
                     "postbackText": "bot__bot_3"
                 }
@@ -80,7 +109,7 @@
     "bot_answer_text": {
         "message": {
             "type": "text",
-            "text": " "
+            "text": ""
         }
     },
     "bot_answer_audio": {

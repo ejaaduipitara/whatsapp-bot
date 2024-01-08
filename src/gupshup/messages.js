@@ -4,18 +4,19 @@ const axios = require("axios");
 const qs = require('qs');
 const { logger } = require("../logger");
 const telemetryService = require("../telemetryService");
+const { setTimeout } = require("timers/promises");
 
 const WA_PROVIDER_TOKEN = process.env.WA_PROVIDER_TOKEN;
 const ACTIVITY_SAKHI_URL = process.env.ACTIVITY_SAKHI_URL;
-const STORY_SAKHI_UTL = process.env.STORY_SAKHI_UTL;
+const STORY_SAKHI_URL = process.env.STORY_SAKHI_URL;
 const BOT_API_TOKEN = process.env.BOT_API_TOKEN;
 const WA_PROVIDER_NUMBER = process.env.WA_PROVIDER_NUMBER;
 const WA_PROVIDER_APPNAME = process.env.WA_PROVIDER_APPNAME;
 
 const audienceMap = {
   'bot_1': null,
-  'bot_2': 'teacher',
-  'bot_3': 'parent'
+  'bot_2': 'parent',
+  'bot_3': 'teacher'
 };
 /**
  * First message to the user
@@ -74,6 +75,7 @@ const sendBotResponse = async (req, msg) => {
 
   await sendBotLoadingMsg(req, msg, userLang, userBot);
   await sendBotAnswer(req, msg, userLang, userBot);
+  await setTimeout(3000);
   await sendBotReplyFooter(req, msg, userLang, userBot);
 }
 
@@ -98,18 +100,23 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendBotAnswer");
   // logger.debug('msgcheck', JSON.stringify(msg))
-  await fetchQueryRespone(req, msg, userLang, userBot)
+  let botResp = await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
+      logger.info("⭆ sendBotAnswer - Text");
       let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
-
-      let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
-      audioMessage.message.url = queryResponse?.output?.audio;
-      await sendMessage(audioMessage, msg);
+      
+      if(queryResponse?.output?.audio) {
+        logger.info("⭆ sendBotAnswer - Audio");
+        // logger.info('Bot response audio: %s', queryResponse?.output?.audio);
+        let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
+        audioMessage.message.url = queryResponse?.output?.audio;
+        await sendMessage(audioMessage, msg);
+      }
     })
     .catch(err => {
-      logger.error('Error in fetchQueryRespone:', err);
+      logger.error(err, 'Error in fetchQueryRespone');
     });
 }
 
@@ -133,7 +140,7 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
 const sendMessage = async (body, msg) => {
   let incomingMsg = JSON.parse(JSON.stringify(msg));
   body = decorateWAMessage(body, incomingMsg);
-  logger.debug('⭆ sendMessage: %o', JSON.stringify(body));
+  logger.info('⭆ sendMessage: \n%o', body);
   let data = qs.stringify(body);
   
   try {
@@ -159,7 +166,7 @@ const sendMessage = async (body, msg) => {
       logger.error(error, "WhatsApp message failed..");
     })
   } catch (error) {
-    logger.error(error, "webhook => error occurred with status code: %o");
+    logger.error(error, "sendMessage => Whatsapp message failed");
   } 
 }
 
@@ -205,10 +212,10 @@ const sendTestMessage = async () => {
   axios.request(config)
   .then((response) => {
     logger.info("API success");
-    logger.debug(JSON.stringify(response.data));
+    // logger.debug(JSON.stringify(response.data));
   })
   .catch((error) => {
-    logger.error(error);
+    logger.error(error, "Bot API failed");
   });
 }
 
@@ -219,7 +226,7 @@ const sendTestMessage = async () => {
  * @returns 
  */
 const setMessageTo = (body, incomingMsg) => {
-  // logger.info('⭆ sendMessage', incomingMsg);
+  // // logger.info('⭆ sendMessage', incomingMsg);
   if (incomingMsg.fromMobile) {
     body.destination = incomingMsg?.fromMobile;
   } else {
@@ -239,12 +246,8 @@ const setMessageTo = (body, incomingMsg) => {
 const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   // logger.debug("⭆ fetchQueryRespone", msg);
   let data = {
-    input: {
-      "language": userLang
-    },
-    output: {
-      "format": "audio"
-    }
+    input: {"language": userLang },
+    output: {"format": "audio"}
   };
 
   // Based on Bot selection add the properties
@@ -252,8 +255,9 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   if(userBot != 'bot_1') {
     botUrl = ACTIVITY_SAKHI_URL ;
     data.input.audienceType = audienceMap[userBot];
+    data.output = {"format": "text"};
   } else {
-    botUrl = STORY_SAKHI_UTL;
+    botUrl = STORY_SAKHI_URL;
   }
 
   // Updating text/audio property to the input request
@@ -262,26 +266,26 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   }
 
   var axiosConfig = {
-    method: 'POST',
-    url: botUrl,
+    method: 'POST', 
+    url: botUrl, 
     headers: {
       'Content-Type': 'application/json'
-    },
-    data: data
+    }, 
+    data: data 
   };
 
   // Add Authorization token if it is defined
   if(BOT_API_TOKEN) {
     axiosConfig.headers.Authorization = `Bearer ${BOT_API_TOKEN}`;
   }
-  // logger.debug('axios', axiosConfig);
+  logger.debug('Bot query -> axios \n%o', axiosConfig);
 
   try {
     const response = await axios(axiosConfig);
-    // logger.info('Telemetry request successful:', response.data);
+    logger.info('Bot API Succedd. response: \n%o', response.data);
     return response.data; // Resolve the promise with response data
   } catch (error) {
-    console.error('fetch response from bot failed:', error);
+    logger.error(error, "Bot API failed");
     throw error; // Throw an error to handle it wherever the function is called
   }
 };
