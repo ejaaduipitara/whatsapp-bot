@@ -25,14 +25,8 @@
                 {
                     "type": "text",
                     "id": "lang",
-                    "title": "ਪੰਜਾਬੀ",
-                    "postbackText": "lang__pa"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "मराठी",
-                    "postbackText": "lang__mr"
+                    "title": "ಕನ್ನಡ",
+                    "postbackText": "lang__ka"
                 }
             ]
         }
