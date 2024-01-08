@@ -31,16 +31,9 @@
                 {
                     "type": "text",
                     "id": "lang",
-                    "title": "ગુજરાતી",
-                    "postbackText": "lang__gu"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
                     "title": "मराठी",
                     "postbackText": "lang__mr"
                 }
-               
             ]
         }
     },
