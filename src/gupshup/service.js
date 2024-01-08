@@ -5,6 +5,7 @@ const telemetryService = require('../telemetryService');
 const { logger } = require("../logger");
 const appConfig = require("../config");
 const { UserSqr } = require("../database/Models");
+const { getLang } = require("../language");
 
 let counter = 0;
 let telemetry = new telemetryService();
@@ -50,12 +51,15 @@ const webhook = async (req, res) => {
     // logger.info(`languageSelection: ${isLangSelected}, BotSelection: ${isBotSelected}`);
     telemetry.logEvent(req, msg);
     try {
-        // (msg?.input?.text?.toString()?.toLowerCase() === 'hi') 
-        if(!isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
+        var regex=/^[0-9]+$/; 
+        isNumber = regex.test(msg?.input?.text);
+        if(isNumber|| !isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
             logger.debug('msg.type %s', msg.type);
-            if(!isLangSelected) { 
+            if(!isLangSelected && !isNumber) { 
+                // First time user typed "hi" or any message send him lang selection
                 msg.input.text = '#';
-            } else if(!isBotSelected) {
+            } else if(!isBotSelected && !isNumber) {
+                // User has not selected the bot still, but user entered some message then ask him to select the bot
                 msg.input.text = '*';
             }
             await menuSelection(req, msg);
@@ -73,7 +77,6 @@ const webhook = async (req, res) => {
                 if(btnPostBackText && btnPostBackText.includes("bot__")) {
                     selectionType = "bot";
                 }
-                
                 logger.debug('msg.type %s', selectionType);
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
@@ -108,6 +111,7 @@ const isAlreadyServed = (curMsgTs, oldMsgTs) => {
 }
 
 const menuSelection = (req, msg) => {
+    logger.info("Menu Selection of \n%o", msg);
     if(msg?.type == "button_reply") {
         let selectionType = msg?.input?.context?.type;
         // logger.debug('msg.type %s', selectionType);
@@ -121,11 +125,21 @@ const menuSelection = (req, msg) => {
         sendLanguageSelection(req, msg);
     } else if ( msg?.input?.text === '*') {
         sendBotSelection(req, msg);
-    }  
+    } else {
+        // If user is sending the language selection as seq number (text input);
+        let selLang = getLang(msg?.input?.text);
+        if(selLang) {
+            msg.input.text = selLang.text;
+            msg.input.context = {type: "lang", id: "lang__"+selLang.code };
+            logger.info("User selected lang after mapping to input text: \n%o", msg);
+            sendBotSelection(req, msg);
+        }
+        // Check the user selected lanauge "seq" optioin number
+    }
 }
 
 const sendLanguageSelection = (req, msg) => {
-    // logger.info("👨 First time user");
+    logger.info("👨 Show langauge selection message");
     telemetry.startEvent(req, msg);
     messages.sendLangSelection(msg);
 }
