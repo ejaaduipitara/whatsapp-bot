@@ -25,6 +25,14 @@ const audienceMap = {
 const sendLangSelection = (incomingMsg) => {
   logger.info("⭆ sendLangSelection");
   let langSelecBody = language.getMessage(language.defaultLang, null, 'lang_selection');
+  let langArray = language.getLanguages();
+  let langSelTxt = langSelecBody.message.text;
+  langArray.forEach((element, index) => {
+    // Adding all the languages to the language selection message
+    langSelTxt += `\n ${index+1}. ${element.text}`;
+  });
+  langSelecBody.message.text = langSelTxt;
+  logger.info("Lang selection text: \n%o", langSelecBody);
   sendMessage(langSelecBody, incomingMsg);
 }
 

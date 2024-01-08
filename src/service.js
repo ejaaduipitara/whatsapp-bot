@@ -25,16 +25,12 @@ const webhook = async (req, res) => {
     let incomingMsg = req.body.entry || {};
     let languageSelection = await req?.session?.languageSelection || null;
     let userSelection = await req?.session?.userSelection || null;
-    
-    
     let msg = incomingMsg && incomingMsg[0] && incomingMsg[0].changes && incomingMsg[0].changes[0].value.messages && incomingMsg[0].changes[0].value.messages[0];
     
-    
-    if(!msg){
+    if(!msg) {
       res.sendStatus(200);
       return;
     } 
-  
   
     //  console.log("IncomingMsg", JSON.stringify(incomingMsg));
      if(msg?.type === 'interactive') {

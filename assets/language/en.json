@@ -1,26 +1,21 @@
 {
+    "languages": [
+        {"text": "English", "code": "en", "index": 1},
+        {"text": "हिंदी", "code": "hi", "index": 2}, 
+        {"text": "मराठी", "code": "mr", "index": 3},
+        {"text": "বাংলা", "code": "bn", "index": 4}, 
+        {"text": "ગુજરાતી", "code": "gu", "index": 5}, 
+        {"text": "ಕನ್ನಡ ", "code": "kn", "index": 6},
+        {"text": "తెలుగు", "code": "te", "index": 7},
+        {"text": "தமிழ்", "code": "ta", "index": 8},
+        {"text": "മലയാളം", "code": "ml", "index": 9},
+        {"text": "ଓଡିଆ", "code": "or", "index": 10},
+        {"text": "অসমীয়া", "code": "as", "index": 11}
+      ],
     "lang_selection": {
         "message": {
-            "type": "quick_reply",
-            "msgid": "lang",
-            "content": {
-                "type": "text",
-                "header": "Welcome to My Jaadui Pitara",
-                "text": "Namaste 🙏 ",
-                "caption": "Please select a Language to proceed"
-            },
-            "options": [
-                {
-                    "type": "text",
-                    "title": "English",
-                    "postbackText": "lang__en"
-                },
-                {
-                    "type": "text",
-                    "title": "हिंदी",
-                    "postbackText": "lang__hi"
-                }
-            ]
+            "type":"text",
+            "text":"Welcome to My Jaadui Pitara \nNamaste 🙏 \n\nPlease enter the number to select your language from the below list "
         }
     },
     "bot_selection": {
