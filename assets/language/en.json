@@ -39,49 +39,8 @@
                     "id": "lang",
                     "title": "मराठी",
                     "postbackText": "lang__mr"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "ಕನ್ನಡ",
-                    "postbackText": "lang__ka"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "తెలుగు",
-                    "postbackText": "lang__te"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "தமிழ்",
-                    "postbackText": "lang__ta"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "മലയാളം",
-                    "postbackText": "lang__ma"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "ଓଡିଆ",
-                    "postbackText": "lang__or"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "বাংলা",
-                    "postbackText": "lang__bn"
-                },
-                {
-                    "type": "text",
-                    "id": "lang",
-                    "title": "অসমীয়া",
-                    "postbackText": "lang__as"
                 }
+               
             ]
         }
     },
