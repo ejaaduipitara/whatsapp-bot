@@ -15,8 +15,8 @@ const WA_PROVIDER_APPNAME = process.env.WA_PROVIDER_APPNAME;
 
 const audienceMap = {
   'bot_1': null,
-  'bot_2': 'teacher',
-  'bot_3': 'parent'
+  'bot_2': 'parent',
+  'bot_3': 'teacher'
 };
 /**
  * First message to the user
