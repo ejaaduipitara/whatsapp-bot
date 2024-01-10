@@ -1,7 +1,7 @@
 # Gupshup
- [Setup & Going Live](https://docs.gupshup.io/docs/setup-going-live)
- [Configuring & testing webhook](https://docs.gupshup.io/docs/set-webhookcallback-url)
- [Gupshup - API documentation](https://docs.gupshup.io/reference/msg)
+ [Setup & Going Live](https://docs.gupshup.io/docs/setup-going-live)  
+ [Configuring & testing webhook](https://docs.gupshup.io/docs/set-webhookcallback-url)  
+ [Gupshup - API documentation](https://docs.gupshup.io/reference/msg)  
 
  ## Webhook
  Make sure `myJP-wahtsapp-bot` service is accessible using public domain host address(with port number in the host). Because Gupshup webhook will only allow to set the webhook public host URL endpoint.  
