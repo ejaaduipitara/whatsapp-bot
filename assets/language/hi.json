@@ -2,7 +2,7 @@
     "bot_selection": {
         "message": {
             "type": "quick_reply",
-            "msgid": "qr1",
+            "msgid": "bot",
             "content": {
                 "type": "text",
                 "header": "मेरा जादुई पिटारा",
