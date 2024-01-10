@@ -36,9 +36,23 @@ app.listen(port, () => loggerPino.logger.info("webhook is listening port: %s", p
 // app.use("/gupshup", gupshupRoutes);
 
 /**
- * Optional webhook for generic use case
+ * Webhook for Gupshup use case
  */
 app.post("/gupshup/webhook", (req, res) => {
+  if(req.body.type === "message") {
+    // loggerPino.logger.debug("/webhook: \n%o ", JSON.stringify(req.body));
+    gupshupServ.webhook(req, res);
+  } else {
+    // res.redirect("gupshup/webhook");
+    loggerPino.logger.debug("/webhook: Other event !=message");
+    res.sendStatus(200);
+  }
+});
+
+/**
+ * Webhook for generic use case
+ */
+app.post("/webhook", (req, res) => {
   if(req.body.type === "message") {
     // loggerPino.logger.debug("/webhook: \n%o ", JSON.stringify(req.body));
     gupshupServ.webhook(req, res);
