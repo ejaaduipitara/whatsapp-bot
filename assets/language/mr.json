@@ -63,8 +63,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "आशा आहे की तुम्हाला ते आवडले असेल!\n  -तुम्हाला मागील मेनूवर जायचे असल्यास “*” प्रविष्ट करा.\n  - जर तुम्हाला मुख्य मेनूवर जायचे असेल तर “#” प्रविष्ट करा."
+            "type": "quick_reply",
+            "msgid": "menusel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "आशा आहे की तुम्हाला ते आवडले असेल!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "भाषा बदला",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "पर्याय बदला",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

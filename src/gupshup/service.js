@@ -81,6 +81,8 @@ const webhook = async (req, res) => {
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
                     case 'bot': sendBotWelcomeMsg(req, msg); break;
+                    case '#': sendLanguageSelection(req, msg); break;
+                    case '*': sendBotSelection(req, msg); break;
                     default: sendLanguageSelection(req, msg);
                 }
             } else {
