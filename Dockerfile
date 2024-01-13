@@ -18,6 +18,7 @@ ENV BOT_SERVICE_URL=$BOT_SERVICE_URL \
     APP_NAME=$APP_NAME
 WORKDIR /app
 COPY package.json .
+RUN rm -rf node_modules/
 RUN npm install
 COPY . .
 RUN rm -rf .env.local

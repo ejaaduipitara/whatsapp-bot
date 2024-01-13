@@ -1,7 +1,7 @@
 {
-  "name": "myJP WhatsApp Bot",
-  "version": "1.0.2",
-  "description": "Whatsapp bot for Digital Jadui Pitara",
+  "name": "myjp-whatsapp-bot",
+  "version": "1.0.4",
+  "description": "Whatsapp bot for Digital/my Jaadui Pitara(myJP)",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
