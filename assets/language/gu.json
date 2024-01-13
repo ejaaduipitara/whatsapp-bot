@@ -64,7 +64,7 @@
     "footer_message": {
         "message": {
             "type": "quick_reply",
-            "msgid": "menusel",
+            "msgid": "menuSel",
             "content": {
                 "type": "text",
                 "header": "",
