@@ -76,7 +76,10 @@ const webhook = async (req, res) => {
                 let btnPostBackText = msg?.input?.context?.id;
                 if(btnPostBackText && btnPostBackText.includes("bot__")) {
                     selectionType = "bot";
+                } else if(btnPostBackText == "#" || btnPostBackText == "*") {
+                    selectionType = btnPostBackText;
                 }
+
                 logger.debug('msg.type %s', selectionType);
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
