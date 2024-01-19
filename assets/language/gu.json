@@ -63,8 +63,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "આશા છે કે તમને તે ગમ્યું હશે!\n  -જો તમે પહેલાના મેનુમાં / યાદીમાં જવા માંગતા હોવ તો “*” દાખલ કરો.\n  -જો તમારે મુખ્ય મેનુમાં / યાદીમાં જવું હોય તો ”#” દાખલ કરો."
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "આશા છે કે તમને તે ગમ્યું હશે!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "ભાષા બદલો",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "વિકલ્પ બદલો",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

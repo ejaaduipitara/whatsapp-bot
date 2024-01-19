@@ -76,11 +76,16 @@ const webhook = async (req, res) => {
                 let btnPostBackText = msg?.input?.context?.id;
                 if(btnPostBackText && btnPostBackText.includes("bot__")) {
                     selectionType = "bot";
+                } else if(btnPostBackText == "#" || btnPostBackText == "*") {
+                    selectionType = btnPostBackText;
                 }
+
                 logger.debug('msg.type %s', selectionType);
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
                     case 'bot': sendBotWelcomeMsg(req, msg); break;
+                    case '#': sendLanguageSelection(req, msg); break;
+                    case '*': sendBotSelection(req, msg); break;
                     default: sendLanguageSelection(req, msg);
                 }
             } else {

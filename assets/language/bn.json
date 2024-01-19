@@ -63,8 +63,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "আশা করি আপনি এটি পছন্দ করেছেন \n  - আপনি যদি আগের মেনুতে যেতে চান তাহলে “*” লিখুন।\n  - আপনি যদি প্রধান মেনুতে যেতে চান তাহলে “#” লিখুন"
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "আশা করি আপনি এটা পছন্দ করেছেন!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "ভাষা পরিবর্তন করুন",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "বিকল্প পরিবর্তন করুন",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

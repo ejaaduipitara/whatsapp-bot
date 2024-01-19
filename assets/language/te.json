@@ -63,8 +63,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "మీకు నచ్చిందని ఆశిస్తున్నాను!\n -మీరు మునుపటి మెనూకి వెళ్లాలనుకుంటే “*” ని నమోదు చేయండి. \n -మీరు ప్రధాన మెనూకి వెళ్లాలనుకుంటే “#”ని నమోదు చేయండి"
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "మీకు నచ్చిందని ఆశిస్తున్నాను!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "భాష మార్చు",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "ఎంపికను మార్చండి",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

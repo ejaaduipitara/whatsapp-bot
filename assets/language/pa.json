@@ -63,8 +63,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "ਉਮੀਦ ਹੈ ਕਿ ਤੁਹਾਨੂੰ ਇਹ ਪਸੰਦ ਆਇਆ ਹੋਵੇਗਾ !\n \n  -ਜੇਕਰ ਤੁਸੀਂ ਪਿਛਲੇ ਮੀਨੂ 'ਤੇ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ “*” ਦਰਜ ਕਰੋ ।\n  -ਜੇਕਰ ਤੁਸੀਂ ਮੁੱਖ ਮੀਨੂ ਵਿੱਚ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ “#” ਦਰਜ ਕਰੋ ।"
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "ਉਮੀਦ ਹੈ ਕਿ ਤੁਹਾਨੂੰ ਇਹ ਪਸੰਦ ਆਇਆ ਹੋਵੇਗਾ !",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "ਭਾਸ਼ਾ ਬਦਲੋ",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "ਵਿਕਲਪ ਬਦਲੋ",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

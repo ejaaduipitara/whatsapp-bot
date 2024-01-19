@@ -94,8 +94,28 @@
     },
     "footer_message": {
         "message": {
-            "type": "text",
-            "text": "Hope you liked it! \n \n  -If you want to go to previous menu enter “*”. \n  -If you want to go to main menu enter “#”"
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "Hope you liked it!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "Change Langauage",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "Change Option",
+                    "postbackText": "*"
+                }
+            ]
         }
     }
 }

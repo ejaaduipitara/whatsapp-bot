@@ -62,9 +62,30 @@
         }
     },
     "footer_message": {
-        "message": {
-            "type": "text",
-            "text": "आशा है आपको यह पसंद आया होगा! \n  -यदि आप पिछले मेनू पर जाना चाहते हैं तो '*' दर्ज करें। \n  -यदि आप मुख्य मेनू पर जाना चाहते हैं तो '#' दर्ज करें"
+         "message": {
+            "type": "quick_reply",
+            "msgid": "menuSel",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "आशा है आपको यह पसंद आया होगा!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "#",
+                    "title": "भाषा बदलें",
+                    "postbackText": "#"
+                },
+                {
+                    "type": "text",
+                    "id": "*",
+                    "title": "विकल्प बदलें",
+                    "postbackText": "*"
+                }
+            ]
         }
+
     }
 }
