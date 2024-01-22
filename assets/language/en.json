@@ -99,7 +99,7 @@
             "content": {
                 "type": "text",
                 "header": "",
-                "text": "Hope you liked it!",
+                "text": "If you want to change language or option, click below",
                 "caption": ""
             },
             "options": [
@@ -114,6 +114,32 @@
                     "id": "*",
                     "title": "Change Option",
                     "postbackText": "*"
+                }
+            ]
+        }
+    },
+    "feedback_message": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "feedback",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "Hope you liked it!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "message-liked",
+                    "title": "👍🏻",
+                    "postbackText": "message-liked"
+                },
+                {
+                    "type": "text",
+                    "id": "message-disliked",
+                    "title": "👎",
+                    "postbackText": "message-disliked"
                 }
             ]
         }

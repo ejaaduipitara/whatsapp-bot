@@ -78,6 +78,8 @@ const webhook = async (req, res) => {
                     selectionType = "bot";
                 } else if(btnPostBackText == "#" || btnPostBackText == "*") {
                     selectionType = btnPostBackText;
+                }else if(btnPostBackText && btnPostBackText.includes("message-")) {
+                    selectionType = "feedback";
                 }
 
                 logger.debug('msg.type %s', selectionType);
@@ -86,6 +88,7 @@ const webhook = async (req, res) => {
                     case 'bot': sendBotWelcomeMsg(req, msg); break;
                     case '#': sendLanguageSelection(req, msg); break;
                     case '*': sendBotSelection(req, msg); break;
+                    case 'feedback': recordFeedback(req, msg); break;
                     default: sendLanguageSelection(req, msg);
                 }
             } else {
@@ -141,6 +144,11 @@ const menuSelection = (req, msg) => {
         }
         // Check the user selected lanauge "seq" optioin number
     }
+}
+
+const recordFeedback = (req, msg) => {
+    logger.info("👨 Recording Feedback");
+    telemetry.interactEvent(req, msg);
 }
 
 const sendLanguageSelection = (req, msg) => {

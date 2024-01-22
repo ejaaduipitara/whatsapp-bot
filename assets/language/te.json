@@ -68,7 +68,7 @@
             "content": {
                 "type": "text",
                 "header": "",
-                "text": "మీకు నచ్చిందని ఆశిస్తున్నాను!",
+                "text": "మీరు భాష లేదా ఎంపికను మార్చాలనుకుంటే, దిగువ క్లిక్ చేయండి",
                 "caption": ""
             },
             "options": [
@@ -83,6 +83,32 @@
                     "id": "*",
                     "title": "ఎంపికను మార్చండి",
                     "postbackText": "*"
+                }
+            ]
+        }
+    },
+    "feedback_message": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "feedback",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "మీకు నచ్చిందని ఆశిస్తున్నాను!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "message-liked",
+                    "title": "👍🏻",
+                    "postbackText": "message-liked"
+                },
+                {
+                    "type": "text",
+                    "id": "message-disliked",
+                    "title": "👎",
+                    "postbackText": "message-disliked"
                 }
             ]
         }
