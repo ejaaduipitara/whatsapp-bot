@@ -138,7 +138,7 @@
                 {
                     "type": "text",
                     "id": "message-disliked",
-                    "title": "👎",
+                    "title": "👎🏻",
                     "postbackText": "message-disliked"
                 }
             ]
