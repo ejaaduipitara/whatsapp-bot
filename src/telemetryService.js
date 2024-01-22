@@ -39,11 +39,11 @@ let telemetry = new telemetryService();
 telemetryService.prototype.createData = (req, eventType, msg) => {
   // logger.debug("Telemetry CreateData - \nIncomingMsg: %o", msg)
   let isLangSelection = session.getUserLanguage(req, msg);
-  let isBotSelection = session.getUserBot(req, msg);
+  let userSelBot = session.getUserBot(req, msg);
 
   const context = {
     env: 'dev',
-    cdata: [{ id: isLangSelection || 'en', type: 'Language' }, { id: isBotSelection || 'bot_1', type: 'Bot' }], //currently hardcoded
+    cdata: [{ id: isLangSelection || 'en', type: 'Language' }, { id: userSelBot || 'bot_1', type: 'Bot' }], //currently hardcoded
     sid: msg?.id,
     did: msg?.id,
     pdata: { id: `${APP_ENV}.${APP_NAME}.whatsapp`, pid: "whatsapp-bot", ver: "1.0" }
@@ -69,8 +69,8 @@ telemetryService.prototype.createData = (req, eventType, msg) => {
   else if (eventType === 'interact') {
     edata.type = 'TOUCH';
     edata.subtype = msg?.input?.context?.id;
-    edata.id = isBotSelection
-    switch (isBotSelection) {
+    edata.id = userSelBot
+    switch (userSelBot) {
       case 'bot_1': edata.pageid = 'story-sakhi';
         break;
       case 'bot_2': edata.pageid = 'parent-sakhi';

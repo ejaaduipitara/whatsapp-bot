@@ -68,7 +68,7 @@
             "content": {
                 "type": "text",
                 "header": "",
-                "text": "આશા છે કે તમને તે ગમ્યું હશે!",
+                "text": "જો તમે ભાષા અથવા વિકલ્પ બદલવા માંગતા હો, તો નીચે ક્લિક કરો",
                 "caption": ""
             },
             "options": [
@@ -83,6 +83,32 @@
                     "id": "*",
                     "title": "વિકલ્પ બદલો",
                     "postbackText": "*"
+                }
+            ]
+        }
+    },
+    "feedback_message": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "feedback",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "આશા છે કે તમને તે ગમ્યું હશે!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "message-liked",
+                    "title": "👍🏻",
+                    "postbackText": "message-liked"
+                },
+                {
+                    "type": "text",
+                    "id": "message-disliked",
+                    "title": "👎",
+                    "postbackText": "message-disliked"
                 }
             ]
         }

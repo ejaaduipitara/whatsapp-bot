@@ -76,6 +76,7 @@ const sendBotResponse = async (req, msg) => {
   await sendBotLoadingMsg(req, msg, userLang, userBot);
   await sendBotAnswer(req, msg, userLang, userBot);
   await setTimeout(3000);
+  await sendFeedback(req, msg, userLang, userBot);
   await sendBotReplyFooter(req, msg, userLang, userBot);
 }
 
@@ -129,6 +130,17 @@ const sendBotAnswer = async (req, msg, userLang, userBot) => {
 const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendBotReplyFooter");
   let body = language.getMessage(userLang, null, 'footer_message');
+  await sendMessage(body, msg);
+}
+
+/**
+ * Feedback options for Bot response message
+ * @param {*} userLang 
+ * @param {*} userBot 
+ */
+const sendFeedback = async (req, msg, userLang, userBot) => {
+  logger.info("⭆ sendFeedback");
+  let body = language.getMessage(userLang, null, 'feedback_message');
   await sendMessage(body, msg);
 }
 

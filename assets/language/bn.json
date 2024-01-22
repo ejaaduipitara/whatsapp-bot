@@ -68,7 +68,7 @@
             "content": {
                 "type": "text",
                 "header": "",
-                "text": "আশা করি আপনি এটা পছন্দ করেছেন!",
+                "text": "আপনি যদি ভাষা বা বিকল্প পরিবর্তন করতে চান, নীচে ক্লিক করুন",
                 "caption": ""
             },
             "options": [
@@ -83,6 +83,32 @@
                     "id": "*",
                     "title": "বিকল্প পরিবর্তন করুন",
                     "postbackText": "*"
+                }
+            ]
+        }
+    },
+    "feedback_message": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "feedback",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "আশা করি আপনি এটা পছন্দ করেছেন!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "message-liked",
+                    "title": "👍🏻",
+                    "postbackText": "message-liked"
+                },
+                {
+                    "type": "text",
+                    "id": "message-disliked",
+                    "title": "👎",
+                    "postbackText": "message-disliked"
                 }
             ]
         }
