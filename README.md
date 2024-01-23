@@ -22,14 +22,16 @@ This Node.js project demonstrates WhatsApp integration for three bots: Parent Sa
 ## Dependant services
  - [Story Sakhi](https://github.com/DJP-Digital-Jaaduii-Pitara/story-api-service)
  - [Activity Sakhi](https://github.com/DJP-Digital-Jaaduii-Pitara/sakhi-api-service)
+ - [Telemetry Service](https://github.com/DJP-Digital-Jaaduii-Pitara/telemetry-service)
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- Node.js (v16.0)
+- Node.js (>v16.0)
 - npm 
 - Postgres - DB (for session management)
+- Gupshup (service provider account)
 
 ## Getting Started
 
