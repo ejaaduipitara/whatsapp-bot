@@ -29,7 +29,7 @@ This Node.js project demonstrates WhatsApp integration for three bots: Parent Sa
 Before you begin, ensure you have the following installed:
 
 - Node.js (>v16.0)
-- npm 
+- npm/yarn
 - Postgres - DB (for session management)
 - Gupshup (service provider account)
 
@@ -46,6 +46,12 @@ Before you begin, ensure you have the following installed:
 
    ```
    npm install
+   ```
+
+   or
+
+   ```
+   yarn
    ```
 
 ### 3. configuration
@@ -68,7 +74,7 @@ Before you begin, ensure you have the following installed:
 | TELEMETRY_SERVICE_URL |    -    | Telemetry servie internal public endpoint to send telemetry events <br> ex: https://telemetry-service:9000/v1/telemetry |
 | API_TOKEN |    -    | For telemetry server |
 | APP_ENV   |   dev   | For telemetry server |
-| APP_NAME  |   djp   | For telemetry server |
+| APP_NAME  |   ejp   | For telemetry server |
 |              |        |           |
 | **WhatsApp service provider specific keys** |    |  |
 | WA_PROVIDER_TOKEN |    -    |  ex: API_TOKEN of the app created in the Whatsapp service provider |
@@ -76,7 +82,7 @@ Before you begin, ensure you have the following installed:
 | WA_PROVIDER_APPNAME |  -      | Name of the app created in the Whatsapp service provider |
 |              |        |           |
 | **For Postgress DB** |        |           |
-| POSTGRES_URL | postgres://<username>:<password>@<ip>:<port>/<database_name> | Progress DB connection string. <br> ex: postgres://postgress:password@localhost:5432/myJP          |
+| POSTGRES_URL | postgres://<username>:<password>@<ip>:<port>/<database_name> | Progress DB connection string. <br> ex: postgres://postgress:password@localhost:5432/eJP          |
  
 
 sample `.env.local` file
@@ -86,11 +92,11 @@ LOG_LEVEL=debug
 CHAR_LIMIT=1024
 ACTIVITY_SAKHI_URL=https://<internal_public_ip>:7081/v1/query
 STORY_SAKHI_URL=http://<internal_public_ip>:7081/v1/query
-POSTGRES_URL=postgres://postgres:password4@127.0.0.1:5432/myJP
+POSTGRES_URL=postgres://postgres:password4@127.0.0.1:5432/eJP
 TELEMETRY_SERVICE_URL=http://<internal_public_ip>:9001/v1/telemetry
 APP_ENV=dev
-APP_NAME=djp
-WA_PROVIDER_APPNAME=myJPApp
+APP_NAME=ejp
+WA_PROVIDER_APPNAME=eJPApp
 WA_PROVIDER_NUMBER=91xxxxxxxxxx
 WA_PROVIDER_TOKEN=<api_token>
 ```
@@ -111,7 +117,7 @@ To test/verify the application is running after start/deploy, run the below comm
 Use browser to test using public ip  
 `<ip>:3010/health`  
 
-output : "myJP WhatsApp Bot is runnig v<version>"  
+output : "eJP WhatsApp Bot is runnig v<version>"  
 
 ### [API Collection](./docs/api.md)
    [Postman collection for testing](./docs/postman/eDP-WhatsApp-Bot.postman_collection.json)
