@@ -281,7 +281,8 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
     method: 'POST', 
     url: botUrl, 
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-Source': "whatsapp"
     }, 
     data: data 
   };

@@ -1,0 +1,50 @@
+{
+    "actor": {
+        "id": "vinu4099",
+        "type": "User"
+    },
+    "context": {
+        "cdata": [
+            {
+                "id": "en",
+                "type": "Language"
+            },
+            {
+                "id": "bot_2",
+                "type": "Bot"
+            }
+        ],
+        "channel": "in.ekstep",
+        "did": "ABEGkZlkMAYjAgs-sCLSUKYUeMQBWA",
+        "env": "dev",
+        "pdata": {
+            "id": "dev.djp.whatsapp",
+            "pid": "whatsapp-bot",
+            "ver": "1.0"
+        },
+        "rollup": {},
+        "sid": "ABEGkZlkMAYjAgs-sCLSUKYUeMQBWA"
+    },
+    "edata": {
+        "level": "INFO",
+        "message": "Success",
+        "params": [
+            {
+                "mesId": "ABEGkZlkMAYjAgs-sCLSUKYUeMQBWA"
+            },
+            {
+                "mesType": "text"
+            },
+            {
+                "msgInput": "Hi"
+            }
+        ],
+        "type": "api_call"
+    },
+    "eid": "LOG",
+    "ets": 1704373144293,
+    "mid": "LOG:ff97462631a97200b085e582cd948e0e",
+    "object": {},
+    "tags": [],
+    "ver": "3.0"
+}
