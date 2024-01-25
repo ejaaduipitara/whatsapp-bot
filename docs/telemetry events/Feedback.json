@@ -18,7 +18,7 @@
         "did": "ABEGkXdgI2VGAhDTfdHozax3-I6zdpxkgEYN",
         "env": "dev",
         "pdata": {
-            "id": "dev.djp.whatsapp",
+            "id": "dev.ejp.whatsapp",
             "pid": "whatsapp-bot",
             "ver": "1.0"
         },
