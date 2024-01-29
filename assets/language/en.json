@@ -24,8 +24,8 @@
             "msgid": "bot",
             "content": {
                 "type": "text",
-                "header": "My Jaadui Pitara",
-                "text": "I am here to help you with amazing stories and activities that you can engage your children with! \n\n- Please select Story Sakhi for creating your own story \n- Please select Parent Sakhi for getting suggestions of activities that you can engage with your children at home \n- Please select Teacher Sakhi for getting suggestions of activities that you can engage with your children at school",
+                "header": "e-Jaadui Pitara",
+                "text": "I am here to help you with amazing stories and activities that you can engage your children with!\r\n\r\n- Please select Story Sakhi for creating your own story\r\n- Please select Parent Tara for getting suggestions of activities that you can engage with your children at home\r\n- Please select Teacher Tara for getting suggestions of activities that you can engage with your children at school",
                 "caption": "Please select below option to proceed"
             },
             "options": [
@@ -38,13 +38,13 @@
                 {
                     "type": "text",
                     "id": "bot",
-                    "title": "Parent Sakhi",
+                    "title": "Parent Tara",
                     "postbackText": "bot__bot_2"
                 },
                 {
                     "type": "text",
                     "id": "bot",
-                    "title": "Teacher Sakhi",
+                    "title": "Teacher Tara",
                     "postbackText": "bot__bot_3"
                 }
             ]
@@ -54,7 +54,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Story Sakhi! \n I can create a story for you about what you ask for. \n\n For example: \n- I can tell a story about a girl who saw the sea for the first time. \n- I can tell a story about a Monkey and a Frog \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Katha Sakhi!\nI can create a new story about whatever you ask for.\n\nFor example you can ask:\n- Tell a story about a child prodigy\n- Tell a story about a girl who loves her mom\n- Tell a story about a Monkey and a Frog\n\nAsk me what story do you want. You can type or speak."
             }
         }
     },
@@ -62,7 +62,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Parent Sakhi! \n I can suggest you activities that you can do with your children at home. Here are few examples of what you can ask: \n\n Examples: \n- What activity can I do with my child using vegetables in your kitchen \n- Suggest how I can make my child interested in household activities \n- My child does not eat nutritious food, what to do \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Parent Tara! \r\nI can suggest you activities that you can do with your children at home. It can also suggest how to handle certain situations with your child.\r\n\r\nHere are few examples of what you can ask:\r\n\r\n- My child gets irritated easily. What should I do?\r\n- What activity can I do with my child using vegetables in my kitchen ?\r\n- Suggest how I can make my child interested in household activities\r\n- My child is not physically active. He only plays game on mobile\r\n- How can I make my child aware of good touch and bad touch?\r\n\r\nAsk me about anything that you want me to suggest. You can type or speak."
             }
         }
     },
@@ -70,7 +70,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Teacher Sakhi! \n I can suggest you activities that you can do with your students (of age 3 to 8 years) at schools.\n I can also answer your questions about the play based learning suggested in the new NCF for Foundational Stage. \n Here are few examples of what you can ask. \n\n Examples: \n- What activity can I do with students to teach sorting or counting numbers \n- How can I conduct my class with children with special needs \n- What can I do to engage a child who is always distracted. \n I can answer your questions about the new NCF \n\n Ask me about anything that you want. You can type or speak."
+                "text": "Wecome to Teacher Tara! \nI can suggest you activities that you can do with your students (of age 3 to 8 years) at schools. \nI can also answer your questions about the play based learning suggested in the new NCF for Foundational Stage. \nHere are few examples of what you can ask. \n\nExamples: \n- What activity can I do with students to teach sorting or counting numbers \n- How can I conduct my class with children with special needs \n- What can I do to engage a child who is always distracted. \n\nI can answer your questions about the new NCF \nAsk me about anything that you want. You can type or speak."
             }
         }
     },
