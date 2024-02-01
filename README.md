@@ -5,10 +5,14 @@ This Node.js project demonstrates WhatsApp integration for three bots: Parent Sa
 <img title="a title" alt="Alt text" src="./docs/images/architecture.png">
 
 ## Table of Contents
-
 - [Features](#features)
+- [Tech stack](#tech-stack)
+- [Dependant services](#dependant-services)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
+   - [configuration](#3-configuration)
+- [API Collection](#api-collection)
+- [Telemetry events](#telemetry-events
 
 ## Features
 - WhatsApp integration with service provider to interact with three bots(Sakhi, Parent, Teacher).
