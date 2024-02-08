@@ -62,7 +62,7 @@
         "Welcome": {
             "message": {
                 "type": "text",
-                "text": "Wecome to Parent Tara! \r\nI can suggest you activities that you can do with your children at home. It can also suggest how to handle certain situations with your child.\r\n\r\nHere are few examples of what you can ask:\r\n\r\n- My child gets irritated easily. What should I do?\r\n- What activity can I do with my child using vegetables in my kitchen ?\r\n- Suggest how I can make my child interested in household activities\r\n- My child is not physically active. He only plays game on mobile\r\n- How can I make my child aware of good touch and bad touch?\r\n\r\nAsk me about anything that you want me to suggest. You can type or speak."
+                "text": "Wecome to Parent Tara! \r\nI can suggest you activities that you can do with your children at home. It can also suggest how to handle certain situations with your child.\r\n\r\nHere are few examples of what you can ask:\r\n\r\n- My child gets irritated easily. What should I do?\r\n- What activity can I do with my child using vegetables in my kitchen ?\r\n- Suggest how I can make my child interested in household activities\r\n- My child is not physically active. He only plays game on mobile\r\n\r\nAsk me about anything that you want me to suggest. You can type or speak."
             }
         }
     },
