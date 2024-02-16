@@ -15,12 +15,21 @@ ENV BOT_SERVICE_URL=$BOT_SERVICE_URL \
     TELEMETRY_SERVICE_URL=$TELEMETRY_SERVICE_URL \
     API_TOKEN=$API_TOKEN \
     APP_ENV=$APP_ENV \
-    APP_NAME=$APP_NAME
+    APP_NAME=$APP_NAME \
+    LOG_LEVEL=$LOG_LEVEL 
 WORKDIR /app
-COPY package.json .
-RUN rm -rf node_modules/
-RUN npm install
+
+# Install dependencies first to leverage Docker cache
+COPY package.json yarn.lock ./
+# RUN rm -rf node_modules/
+
+# Using cache mount for npm install, so unchanged packages aren’t downloaded every time
+RUN --mount=type=cache,target=/app/node_modules \
+    yarn
+
+# Copy the rest of your app's source code
 COPY . .
-RUN rm -rf .env.local
 EXPOSE 3010
+
+# Your app's start command
 CMD [ "npm" , "start"]

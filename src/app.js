@@ -1,11 +1,8 @@
 "use strict";
 const express = require("express");
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
-// console.log("envFile path", envFile);
-const dotenv = require('dotenv').config({ path: envFile });
-// console.log(dotenv);
 const http = require('http')
 const body_parser = require("body-parser");
+const dotenv = require('./dotenv');
 const session = require('./session');  // Import session module
 const language = require("./language");
 // const netcoreRoutes = require("./netcore/routes");
@@ -14,8 +11,6 @@ const gupshupServ = require("./gupshup/service");
 const cookieParser = require("cookie-parser");
 const loggerPino = require("./logger");
 const appConfig = require("./config");
-
-
 
 const app = express(); // creates express http server
 // app.use(cors());
@@ -26,7 +21,7 @@ app.use(session.init());
 language.init();
 
 // Sets server port and logs message on success
-let port = process.env.PORT || 3020;
+let port = process.env.PORT || 3010;
 app.listen(port, () => loggerPino.logger.info("webhook is listening port: %s", port));
 
 // Used for Netcore whatsapp integration
@@ -58,7 +53,7 @@ app.post("/webhook", (req, res) => {
     gupshupServ.webhook(req, res);
   } else {
     // res.redirect("gupshup/webhook");
-    loggerPino.logger.debug("/webhook: Other event !=message");
+    loggerPino.logger.debug("/webhook: Other event !=message /n%o", req.body);
     res.sendStatus(200);
   }
 });

@@ -42,8 +42,8 @@ telemetryService.prototype.createData  = (req, eventType, msg) => {
   let isBotSelection = session.getUserBot(req, msg);
   
   const context = {
-    env: 'dev',
-    cdata: [ {id: isLangSelection || 'en', type:'Language' },{id: isBotSelection || 'bot_1', type: 'Bot' }], //currently hardcoded
+    env: `${APP_ENV}`,
+    cdata: [{ id: isLangSelection || 'en', type: 'Language' }, { id: userSelBot || 'bot_1', type: 'Bot' }], //currently hardcoded
     sid: msg?.id,
     did: msg?.id,
     pdata: {id:`${APP_ENV}.${APP_NAME}.whatsapp`,pid:"whatsapp-bot",ver:"1.0"}

@@ -1,27 +1,16 @@
 const session = require('express-session');
-// const pgSession = require('connect-pg-simple')(session);
-var SequelizeStore = require("connect-session-sequelize")(session.Store);
-// const { Client } = require('pg');
-const { logger } = require('../logger');
+const { sequelize } = require('./sequelizeConnect');
 const { Sequelize } = require('sequelize');
+var SequelizeStore = require("connect-session-sequelize")(session.Store);
+const { logger } = require('../logger');
 const { InBoundGupshup } = require('../gupshup/InBound');
-const POSTGRES_URL = process.env.POSTGRES_URL;
 const oneDay = 1000 * 60 * 60 * 24;
-const sequelize = new Sequelize(POSTGRES_URL);
+
+
 const mobileMult = 2013;
 var sampleMobile = "910000000000";
 var sampleUserName= "ejpu";// ejp user
-
-const Session = sequelize.define("Session", {
-  sid: {
-    type: Sequelize.STRING,
-    primaryKey: true,
-  },
-  userId: Sequelize.STRING,
-  expires: Sequelize.DATE,
-  data: Sequelize.TEXT,
-});
-
+let store;
 function extendDefaultFields(defaults, session) {
   // console.log(defaults, session);
   return {
@@ -31,14 +20,29 @@ function extendDefaultFields(defaults, session) {
   };
 }
 
-const store = new SequelizeStore({
-  db: sequelize,
-  table: "Session",
-  extendDefaultFields,
-});
+const preInit = () => {
+  const Session = sequelize.define("Session", {
+    sid: {
+      type: Sequelize.STRING,
+      primaryKey: true,
+    },
+    userId: Sequelize.STRING,
+    expires: Sequelize.DATE,
+    data: Sequelize.TEXT,
+  });
+
+ store = new SequelizeStore({
+    db: sequelize,
+    table: "Session",
+    extendDefaultFields,
+  });
+  store.sync();
+}
+preInit();
 
 const init = () => {
   logger.info("⭆ Database init!");
+
   return session({
       secret: "ABEGkZlkMAYjAgs-sJSPdqSRIMDoHg",
       genid: function(req) {
@@ -50,8 +54,6 @@ const init = () => {
       cookie: { maxAge: oneDay }
   })
 }
-
-store.sync();
 
 /**
  * Generate sessionId and userID of the whatsapp user
@@ -107,10 +109,6 @@ const getData = async (userId) => {
   } catch (error) {
     logger.error(error, "Database query - Get user session failed %s", userId);
   }
-}
-
-const saveUser = async(userData) => {
-  
 }
 
 module.exports = {init, getData, sequelize}

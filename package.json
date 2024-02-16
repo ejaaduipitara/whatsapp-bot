@@ -1,11 +1,12 @@
 {
   "name": "myjp-whatsapp-bot",
   "version": "1.0.4",
-  "description": "Whatsapp bot for Digital/my Jaadui Pitara(myJP)",
+  " ": "Whatsapp bot for Digital/my Jaadui Pitara(myJP)",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "local": "NODE_ENV=local nodemon app.js"
+    "local": "NODE_ENV=local nodemon -L --inspect src/app.js",
+    "test": "NODE_ENV=local node test/postman/test.js"
   },
   "author": "ekstep",
   "license": "ISC",
@@ -36,6 +37,7 @@
     "node": "16.x"
   },
   "devDependencies": {
+    "newman": "^6.1.1",
     "nodemon": "3.0.2"
   }
 }

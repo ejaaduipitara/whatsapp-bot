@@ -25,7 +25,13 @@ const UserModel = {
 // }
 
 // const SessionSeq = sequelize.define("Session", SessionModel);
-const UserSqr = sequelize.define("User", UserModel);
-UserSqr.sync();
+let UserSqr;
+try {
+    UserSqr = sequelize.define("User", UserModel);
+    UserSqr.sync();
+} catch (error) {
+    logger.error(error, "Postgress DB connection failed");
+}
+
 
 module.exports = { UserSqr }
