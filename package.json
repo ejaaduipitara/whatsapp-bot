@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/app.js",
     "local": "NODE_ENV=local nodemon -L --inspect src/app.js",
-    "test": "NODE_ENV=local node test/postman/test.js"
+    "test": "node test/postman/test.js & npm run ${1:-start}",
+    "test-local": "NODE_ENV=${1:-local} node test/postman/test.js & npm run ${1:-local}"
   },
   "author": "ekstep",
   "license": "ISC",
