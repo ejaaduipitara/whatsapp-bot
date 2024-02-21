@@ -34,4 +34,4 @@ newman.run({
     else {
         console.log('collection run completed.');
     }
-});;
+});

@@ -1,1 +1,4 @@
 node_modules
+.generate-docker-image.sh
+.env.local
+launch.json

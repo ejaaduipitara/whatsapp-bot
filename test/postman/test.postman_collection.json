@@ -35,100 +35,12 @@
 				},
 				"url": {
 					"raw": "{{TELEMETRY_SERVICE_URL}}",
-					"protocol": "http",
 					"host": [
-						"152",
-						"67",
-						"162",
-						"156"
-					],
-					"port": "9001",
-					"path": [
-						"v1",
-						"telemetry"
+						"{{TELEMETRY_SERVICE_URL}}"
 					]
 				}
 			},
-			"response": [
-				{
-					"name": "telemetry",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{TELEMETRY_SERVICE_URL}}",
-							"protocol": "http",
-							"host": [
-								"152",
-								"67",
-								"162",
-								"156"
-							],
-							"port": "9001",
-							"path": [
-								"v1",
-								"telemetry"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Access-Control-Allow-Origin",
-							"value": "*"
-						},
-						{
-							"key": "Access-Control-Allow-Methods",
-							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
-						},
-						{
-							"key": "Access-Control-Allow-Headers",
-							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, datatype, *"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "103"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"67-/vw+ObPRROR/AsgNglmjSO/3rgo\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 16 Feb 2024 22:27:29 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=300"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"id\": \"api.telemetry\",\n    \"ver\": \"1.0\",\n    \"ets\": 1708122449151,\n    \"params\": {},\n    \"responseCode\": \"SUCCESS\",\n    \"result\": {}\n}"
-				}
-			]
+			"response": []
 		},
 		{
 			"name": "STORY_SAKHI_URL",
@@ -159,80 +71,12 @@
 				},
 				"url": {
 					"raw": "{{STORY_SAKHI_URL}}",
-					"protocol": "http",
 					"host": [
-						"152",
-						"67",
-						"183",
-						"46"
-					],
-					"port": "7081",
-					"path": [
-						"v1",
-						"query"
+						"{{STORY_SAKHI_URL}}"
 					]
 				}
 			},
-			"response": [
-				{
-					"name": "Story Success",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"test\": \"Story of lion\",\n    \"input\": {\n        \"language\": \"en\",\n        \"text\": \"Lion Story\"\n    },\n    \"output\": {\n        \"format\": \"text\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{TELEMETRY_SERVICE_URL}}",
-							"protocol": "http",
-							"host": [
-								"152",
-								"67",
-								"183",
-								"46"
-							],
-							"port": "7081",
-							"path": [
-								"v1",
-								"query"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 16 Feb 2024 22:43:20 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "1405"
-						},
-						{
-							"key": "content-type",
-							"value": "application/json"
-						},
-						{
-							"key": "x-process-time",
-							"value": "14.417527675628662"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"output\": {\n        \"text\": \"Title: The Hiding Lion and the Smart Rabbit\\n\\nOnce upon a time, there was a mischievous little rabbit named Chintu who lived in a lively village in India. Chintu was well-known for his smart brains, and all the animals loved him. There was also a big, strong lion named Sheru living far away in a dense jungle.\\n\\nOne day, Sheru thought of playing a trick on the village animals. He decided to hide in the nearby bushes and see how the animals would react to his disappearance. He roared loudly and left for his hideout, leaving all the animals worried.\\n\\nWhen the roar echoed throughout the village, all the animals became scared. Especially little Chintu who was Sheru's best friend. He was worried about his big friend, so he decided to find him.\\n\\nWith his sharp mind, Chintu thought of a plan. He noticed Sheru's footprints leading to the bushes and was convinced that Sheru was hiding there. But he had to be sure.\\n\\nUsing his tiny paws, Chintu made a small ball of mud and threw it into the bush. Hearing the rustle, Sheru couldn't resist laughing. His laughter confirmed to Chintu and the other animals that Sheru was only playing a prank.\\n\\nChintu, with a relieved sigh, said, \\\"Sheru, you're always full of tricks!\\\"\\n\\nThis fun little story ends with a question: What kind of game will Chintu plan next to play with Sheru?\",\n        \"audio\": null,\n        \"language\": \"en\",\n        \"format\": \"text\"\n    }\n}"
-				}
-			]
+			"response": []
 		},
 		{
 			"name": "ACTIVITY_SAKHI_URL",
@@ -263,80 +107,12 @@
 				},
 				"url": {
 					"raw": "{{ACTIVITY_SAKHI_URL}}",
-					"protocol": "http",
 					"host": [
-						"144",
-						"24",
-						"130",
-						"223"
-					],
-					"port": "7081",
-					"path": [
-						"v1",
-						"query"
+						"{{ACTIVITY_SAKHI_URL}}"
 					]
 				}
 			},
-			"response": [
-				{
-					"name": "Parent story success",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"test\": \"Story of lion\",\n    \"input\": {\n        \"language\": \"en\",\n        \"text\": \"Lion Story\",\n        \"audienceType\": \"parent\"\n    },\n    \"output\": {\n        \"format\": \"text\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{TELEMETRY_SERVICE_URL}}",
-							"protocol": "http",
-							"host": [
-								"144",
-								"24",
-								"130",
-								"223"
-							],
-							"port": "7081",
-							"path": [
-								"v1",
-								"query"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 16 Feb 2024 22:44:57 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "1141"
-						},
-						{
-							"key": "content-type",
-							"value": "application/json"
-						},
-						{
-							"key": "x-process-time",
-							"value": "12.451235055923462"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"output\": {\n        \"text\": \"One story you can narrate to your child is \\\"The Lion and the Rabbit\\\". In this story, a ferocious lion lives in a dense forest and hunts other animals. Once, the animals hold a meeting to figure a way out of this problem. Meanwhile, a rabbit plans a clever trick. He makes the lion believe there is a rival lion threatening to take his place as the king. The rabbit leads the lion to a well where the lion sees his reflection and believes it's the other lion. \\n\\nOr, you can narrate \\\"The Lion and the Mouse\\\". In this story, a lion spares a mouse's life when it pleads for mercy. Later, when the lion is trapped in a hunter's net, the mouse helps free him by gnawing the rope. Thus, even a small mouse can help a mighty lion.\\n\\nYou can tell these stories by arranging related story cards from left to right to help your child understand the sequence. Then, let your child arrange the story cards in order and retell the stories in their own words.\\n\\nSource: vidyapravesh.pdf, page# 245, 247; JP Manual.pdf, page# 68; anand-activity-book-for-balvatika-13246.pdf, page# 69.\",\n        \"audio\": \"\",\n        \"language\": \"en\",\n        \"format\": \"text\"\n    }\n}"
-				}
-			]
+			"response": []
 		}
 	],
 	"event": [
@@ -372,7 +148,7 @@
 		},
 		{
 			"key": "ACTIVITY_SAKHI_URL",
-			"value": "{{activity_sakhi_endpint}}",
+			"value": "{{activity_sakhi_endpoint}}",
 			"type": "string"
 		}
 	]
