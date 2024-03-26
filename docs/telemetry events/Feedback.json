@@ -1,0 +1,40 @@
+{
+    "actor": {
+        "id": "abhi7098",
+        "type": "User"
+    },
+    "context": {
+        "cdata": [
+            {
+                "id": "kn",
+                "type": "Language"
+            },
+            {
+                "id": "bot_1",
+                "type": "Bot"
+            }
+        ],
+        "channel": "in.ekstep",
+        "did": "ABEGkXdgI2VGAhDTfdHozax3-I6zdpxkgEYN",
+        "env": "dev",
+        "pdata": {
+            "id": "dev.ejp.whatsapp",
+            "pid": "whatsapp-bot",
+            "ver": "1.0"
+        },
+        "rollup": {},
+        "sid": "ABEGkXdgI2VGAhDTfdHozax3-I6zdpxkgEYN"
+    },
+    "edata": {
+        "id": "bot_1",
+        "pageid": "story-sakhi",
+        "subtype": "message-liked",
+        "type": "TOUCH"
+    },
+    "eid": "INTERACT",
+    "ets": 1705923456933,
+    "mid": "INTERACT:fb6ae5b937ab1f34ff4424caa2e53e4a",
+    "object": {},
+    "tags": [],
+    "ver": "3.0"
+}

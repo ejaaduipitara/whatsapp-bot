@@ -1,7 +1,7 @@
 class OutBound {
 
     body = {
-        "app": "TestDJP",
+        "app": "TestEJP",
         "timestamp": new Date().getTime(),
         "version": 2,
         "type": "message",

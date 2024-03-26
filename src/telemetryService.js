@@ -14,11 +14,11 @@ let APP_NAME = process.env.APP_NAME;
 
 var default_config = {
   'runningEnv': 'server',
-  'dispatcher': function (event) {},
+  'dispatcher': function (event) { },
   'batchsize': 1
 };
 
-function telemetryService() {}
+function telemetryService() { }
 
 /**
  * @description Default configuration for telemetry service.
@@ -36,19 +36,19 @@ let telemetry = new telemetryService();
  * @returns {object} - Telemetry data object containing context, object, and edata.
  */
 
-telemetryService.prototype.createData  = (req, eventType, msg) => {
+telemetryService.prototype.createData = (req, eventType, msg) => {
   // logger.debug("Telemetry CreateData - \nIncomingMsg: %o", msg)
   let isLangSelection = session.getUserLanguage(req, msg);
-  let isBotSelection = session.getUserBot(req, msg);
-  
+  let userSelBot = session.getUserBot(req, msg);
+
   const context = {
     env: 'dev',
-    cdata: [ {id: isLangSelection || 'en', type:'Language' },{id: isBotSelection || 'bot_1', type: 'Bot' }], //currently hardcoded
+    cdata: [{ id: isLangSelection || 'en', type: 'Language' }, { id: userSelBot || 'bot_1', type: 'Bot' }], //currently hardcoded
     sid: msg?.id,
     did: msg?.id,
-    pdata: {id:`${APP_ENV}.${APP_NAME}.whatsapp`,pid:"whatsapp-bot",ver:"1.0"}
+    pdata: { id: `${APP_ENV}.${APP_NAME}.whatsapp`, pid: "whatsapp-bot", ver: "1.0" }
   };
-  const actor = { 
+  const actor = {
     id: msg?.userId,
     type: 'User'
   };
@@ -59,23 +59,36 @@ telemetryService.prototype.createData  = (req, eventType, msg) => {
     edata.type = 'api_call';
     edata.level = 'INFO';
     edata.message = 'Success';
-    edata.params = [{ mesId: msg?.id }, { mesType:msg?.type },{msgInput: msg?.input?.text || msg?.input?.audio|| ''}];
+    edata.params = [{ mesId: msg?.id }, { mesType: msg?.type }, { msgInput: msg?.input?.text || msg?.input?.audio || '' }];
   }
-  else if(eventType === 'start') {
+  else if (eventType === 'start') {
     edata.type = 'session'
-    edata.mode =  "preview"
+    edata.mode = "preview"
     edata.duration = 1;
   }
+  else if (eventType === 'interact') {
+    edata.type = 'TOUCH';
+    edata.subtype = msg?.input?.context?.id;
+    edata.id = userSelBot
+    switch (userSelBot) {
+      case 'bot_1': edata.pageid = 'story-sakhi';
+        break;
+      case 'bot_2': edata.pageid = 'parent-sakhi';
+        break;
+      case 'bot_3': edata.pageid = 'teacher-sakhi';
+        break;
+    }
+  }
 
-  return { context, edata, actor};
+  return { context, edata, actor };
 };
 
 /**
  * Initializes telemetry event.
  * @description Initializes telemetry event based on telemetry configuration.
  */
-telemetryService.prototype.initialize = function() {
-  if(!this.isInitialized) {
+telemetryService.prototype.initialize = function () {
+  if (!this.isInitialized) {
     let eDPConfig = {
       host: TELEMETRY_URL
     }
@@ -91,7 +104,7 @@ telemetryService.prototype.initialize = function() {
  * @param {Object} req - The request object.
  * @param {Object} msg - The message object.
  */
-telemetryService.prototype.startEvent = function(req,msg) {
+telemetryService.prototype.startEvent = function (req, msg) {
   let StartData = telemetry.createData(req, 'start', msg);
   // logger.debug("Telemetry start: %o", StartData);
   telemetry.start(StartData);
@@ -103,9 +116,20 @@ telemetryService.prototype.startEvent = function(req,msg) {
  * @param {Object} req - The request object.
  * @param {Object} msg - The message object.
  */
-telemetryService.prototype.logEvent = function(req,msg) {
-  let logData = telemetry.createData(req, 'log',msg);
+telemetryService.prototype.logEvent = function (req, msg) {
+  let logData = telemetry.createData(req, 'log', msg);
   telemetry.log(logData);
+}
+
+/**
+ * Logs interact telemetry event.
+ * @description Logs telemetry event with the given request and message data.
+ * @param {Object} req - The request object.
+ * @param {Object} msg - The message object.
+ */
+telemetryService.prototype.interactEvent = function (req, msg) {
+  let logData = telemetry.createData(req, 'interact', msg);
+  telemetry.interact(logData);
 }
 
 /**
@@ -183,6 +207,20 @@ telemetryService.prototype.log = function (logData) {
 }
 
 /**
+ * for interact event
+ * data object have these properties {'edata', context', 'object', 'tags'}
+ */
+telemetryService.prototype.interact = function (interactData) {
+  Telemetry.interact(interactData.edata, {
+    context: interactData.context,
+    object: interactData.object,
+    actor: interactData.actor,
+    tags: interactData.tags,
+    duration: interactData.duration
+  })
+}
+
+/**
  * Sends telemetry data to a specified endpoint using Axios POST request.
  * @param {Object} req - The request object.
  * @param {Array} eventsData - The array containing telemetry events data.
@@ -207,7 +245,7 @@ function sendTelemetry(req, eventsData, callback) {
     headers: {
       'Content-Type': 'application/json',
       'X-Source': "whatsapp",
-      'Authorization': `Bearer ${ TELEMETRY_AUTH_TOKEN}`
+      'Authorization': `Bearer ${TELEMETRY_AUTH_TOKEN}`
     },
     data: data // The telemetry data to send
   };
@@ -232,7 +270,7 @@ function sendTelemetry(req, eventsData, callback) {
  * @returns {Object} - The telemetry request body.
  */
 
- function prepareTelemetryRequestBody (req, eventsData) {
+function prepareTelemetryRequestBody(req, eventsData) {
   var data = {
     'id': 'ekstep.telemetry',
     'ver': '3.0',
@@ -247,4 +285,4 @@ function sendTelemetry(req, eventsData, callback) {
   return data
 }
 
-module.exports =  telemetryService
+module.exports = telemetryService

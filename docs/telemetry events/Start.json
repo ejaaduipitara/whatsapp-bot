@@ -1,0 +1,44 @@
+{
+    "actor": {
+        "id": 11356959291190936,
+        "type": "User"
+    },
+    "context": {
+        "cdata": [
+            {
+                "id": "en",
+                "type": "Language"
+            },
+            {
+                "id": "bot_1",
+                "type": "Bot"
+            }
+        ],
+        "channel": "in.ekstep",
+        "did": "ABEGkZlkMAYjAgs-sCLSUKYUeMQBWA",
+        "env": "dev",
+        "pdata": {
+            "id": "dev.ejp.whatsapp",
+            "pid": "whatsapp-bot",
+            "ver": "1.0"
+        },
+        "rollup": {},
+        "sid": "ABEGkZlkMAYjAgs-sCLSUKYUeMQBWA"
+    },
+    "edata": {
+        "duration": 1,
+        "mode": "preview",
+        "type": "session"
+    },
+    "eid": "START",
+    "ets": 1704191697399,
+    "mid": "START:a78884f30847286e84e5a447a5cb3d64",
+    "object": {
+        "id": 11356959291190936,
+        "rollup": {},
+        "type": "Whatsapp",
+        "ver": "1.0"
+    },
+    "tags": [],
+    "ver": "3.0"
+}
