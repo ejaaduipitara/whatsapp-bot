@@ -13,7 +13,7 @@ const BOT_API_TOKEN = process.env.BOT_API_TOKEN;
 const WA_PROVIDER_NUMBER = process.env.WA_PROVIDER_NUMBER;
 const WA_PROVIDER_APPNAME = process.env.WA_PROVIDER_APPNAME;
 
-const audienceMap = {
+const contextMap = {
   'bot_1': null,
   'bot_2': 'parent',
   'bot_3': 'teacher'
@@ -266,7 +266,7 @@ const fetchQueryRespone = async (req, msg, userLang, userBot) => {
   let botUrl;
   if(userBot != 'bot_1') {
     botUrl = ACTIVITY_SAKHI_URL ;
-    data.input.audienceType = audienceMap[userBot];
+    data.input.context = contextMap[userBot];
     data.output = {"format": "text"};
   } else {
     botUrl = STORY_SAKHI_URL;
