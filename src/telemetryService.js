@@ -11,6 +11,7 @@ let TELEMETRY_URL = process.env.TELEMETRY_SERVICE_URL;
 let TELEMETRY_AUTH_TOKEN = process.env.API_TOKEN;
 let APP_ENV = process.env.APP_ENV;
 let APP_NAME = process.env.APP_NAME;
+const regex = /[^a-zA-Z0-9]/g; // Matches characters except alphanumeric
 
 var default_config = {
   'runningEnv': 'server',
@@ -49,7 +50,7 @@ telemetryService.prototype.createData = (req, eventType, msg) => {
     pdata: { id: `${APP_ENV}.${APP_NAME}.whatsapp`, pid: "whatsapp-bot", ver: "1.0" }
   };
   const actor = {
-    id: msg?.userId,
+    id: msg?.userId.replace(regex, ''),
     type: 'User'
   };
 
