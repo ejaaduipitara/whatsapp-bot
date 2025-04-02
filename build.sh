@@ -1,7 +1,6 @@
-
 #!/bin/bash
 # Build script
-set -eo pipefail
+#set -eo pipefail
 build_tag=$1
 name=whatsapp-bot
 node=$2
