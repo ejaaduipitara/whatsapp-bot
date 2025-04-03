@@ -10,7 +10,8 @@
         {"text": "தமிழ்", "code": "ta", "index": 8},
         {"text": "മലയാളം", "code": "ml", "index": 9},
         {"text": "ଓଡିଆ", "code": "or", "index": 10},
-        {"text": "অসমীয়া", "code": "as", "index": 11}
+        {"text": "অসমীয়া", "code": "as", "index": 11},
+        {"text": "اُردُو", "code": "ur", "index": 12}
       ],
     "lang_selection": {
         "message": {
