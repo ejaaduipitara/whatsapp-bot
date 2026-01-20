@@ -12,7 +12,9 @@ let telemetry = new telemetryService();
 telemetry.initialize();
 
 const webhook = async (req, res) => {
+    console.log("Incoming request body: %o", req.body);
     let incomingMsg =  new inBoundGP.InBoundGupshup(req.body);
+    console.log("Converted InBoundGupshup message: %o", incomingMsg);
     let msg = incomingMsg;
     
     // To avoid other events coming from webhook of service provider
@@ -27,8 +29,10 @@ const webhook = async (req, res) => {
     // Has to find the roor cause, why the same request is coming multiple times
     let userSess = await UserSqr.findByPk(msg?.userId);
     let oldMsgTs = userSess?.lastestMsgTimestamp;
-    logger.debug("Webhook - RawData: %o", msg.rawData);
+    logger.info("Webhook - RawData: %o", msg.rawData);
+    console.log("Webhook - RawData: %o", msg.rawData);
     logger.info("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
+    console.log("msg.timestamp: %s, oldMsgTs: %s", msg.timestamp, oldMsgTs);
     if(oldMsgTs && isAlreadyServed(msg.timestamp, oldMsgTs)) {
         logger.warn("Request is already served.");
         res.sendStatus(403);
@@ -39,6 +43,7 @@ const webhook = async (req, res) => {
     // telemetry Initializing
     // let userSess = await userSession.createSession(req, msg);
     logger.info("Webhook - createSession resp: \n%o", userSess);
+    console.log("Webhook - createSession resp: \n%o", userSess);
     let isNewUser = userSess ? false : true;
     let isLangSelected, isBotSelected;
     if(userSess) {
@@ -54,7 +59,7 @@ const webhook = async (req, res) => {
         var regex=/^[0-9]+$/; 
         isNumber = regex.test(msg?.input?.text);
         if(isNumber|| !isLangSelected || !isBotSelected || (msg?.input?.text === '#') || (msg?.input?.text === '*')) {
-            logger.debug('msg.type %s', msg.type);
+            logger.info('msg.type %s', msg.type);
             if(!isLangSelected && !isNumber) { 
                 // First time user typed "hi" or any message send him lang selection
                 msg.input.text = '#';
@@ -67,7 +72,7 @@ const webhook = async (req, res) => {
             // existing user & converstaion is happening
         } else {
             counter++;
-            // logger.info('User query '+ counter);
+            logger.info('User query '+ counter);
             if(msg?.type == "button_reply") {
                 
                 let selectionType = msg?.input?.context?.type;
@@ -82,7 +87,7 @@ const webhook = async (req, res) => {
                     selectionType = "feedback";
                 }
 
-                logger.debug('msg.type %s', selectionType);
+                logger.info('msg.type %s', selectionType);
                 switch(selectionType) {
                     case 'lang': sendBotSelection(req, msg); break;
                     case 'bot': sendBotWelcomeMsg(req, msg); break;
@@ -92,6 +97,7 @@ const webhook = async (req, res) => {
                     default: sendLanguageSelection(req, msg);
                 }
             } else {
+                console.log("######## Sending bot response for message: %o", msg);
                 await messages.sendBotResponse(req, msg);
             }
             if(appConfig.isLocalMode) res.sendStatus(200);

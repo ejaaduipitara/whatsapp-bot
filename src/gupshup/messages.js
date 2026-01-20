@@ -70,14 +70,25 @@ const sendBotWelcomeMsg = (req, msg) => {
  */
 const sendBotResponse = async (req, msg) => {
   logger.info("⭆ sendBotResponse");
+  console.log("########## sendBotResponse");
   let userLang = userSession.getUserLanguage(req, msg);
   let userBot = userSession.getUserBot(req, msg);
-
+  
+  console.log("######## before sendBotLoadingMsg");
   await sendBotLoadingMsg(req, msg, userLang, userBot);
+  console.log("######## after sendBotLoadingMsg");
+  console.log("######## before sendBotAnswer");
   await sendBotAnswer(req, msg, userLang, userBot);
+  console.log("######## after sendBotAnswer");
+  console.log("######## before sendFeedback");
   await setTimeout(3000);
+  console.log("######## after wait before sendFeedback");
+  console.log("######## before sendFeedback");
   await sendFeedback(req, msg, userLang, userBot);
+  console.log("######## after sendFeedback");
+  console.log("######## before sendBotReplyFooter");
   await sendBotReplyFooter(req, msg, userLang, userBot);
+  console.log("######## after sendBotReplyFooter");
 }
 
 /**
@@ -87,7 +98,9 @@ const sendBotResponse = async (req, msg) => {
  */
 const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendBotLoadingMsg");
+  console.log("######## sendBotLoadingMsg");
   let body = language.getMessage(userLang, null, 'loading_message');
+  console.log("######## Loading message body: \n%o", body);
   await sendMessage(body, msg);
 }
 
@@ -100,17 +113,21 @@ const sendBotLoadingMsg = async (req, msg, userLang, userBot) => {
  */
 const sendBotAnswer = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendBotAnswer");
-  // logger.debug('msgcheck', JSON.stringify(msg))
+  logger.info('msgcheck', JSON.stringify(msg))
+  console.log('###### msgcheck', JSON.stringify(msg));
   let botResp = await fetchQueryRespone(req, msg, userLang, userBot)
     .then(async (queryResponse) => {
+      console.log("Starting sendBotAnswer with response:");
       logger.info("⭆ sendBotAnswer - Text");
+      console.log("######## sendBotAnswer - Text",msg);
       let bodyMessage = language.getMessage(language.defaultLang, null, 'bot_answer_text');
+      console.log("######## Bot answer text body before update: \n%o", bodyMessage);
       bodyMessage.message.text = queryResponse?.output?.text;
       await sendMessage(bodyMessage, msg);
       
       if(queryResponse?.output?.audio) {
         logger.info("⭆ sendBotAnswer - Audio");
-        // logger.info('Bot response audio: %s', queryResponse?.output?.audio);
+        logger.info('Bot response audio: %s', queryResponse?.output?.audio);
         let audioMessage = language.getMessage(language.defaultLang, null, 'bot_answer_audio');
         audioMessage.message.url = queryResponse?.output?.audio;
         await sendMessage(audioMessage, msg);
@@ -140,7 +157,9 @@ const sendBotReplyFooter = async (req, msg, userLang, userBot) => {
  */
 const sendFeedback = async (req, msg, userLang, userBot) => {
   logger.info("⭆ sendFeedback");
+  console.log("######## start sendFeedback");
   let body = language.getMessage(userLang, null, 'feedback_message');
+  console.log("######## Feedback message body: \n%o", body);
   await sendMessage(body, msg);
 }
 
@@ -150,8 +169,10 @@ const sendFeedback = async (req, msg, userLang, userBot) => {
  * @param {*} incomingMsg 
  */
 const sendMessage = async (body, msg) => {
+  console.log("######## Start sendMessage body before decorate");
   let incomingMsg = JSON.parse(JSON.stringify(msg));
   body = decorateWAMessage(body, incomingMsg);
+  console.log("######## sendMessage body after decorate: \n%o", body);
   logger.info('⭆ sendMessage: \n%o', body);
   let data = qs.stringify(body);
   
@@ -167,11 +188,12 @@ const sendMessage = async (body, msg) => {
       },
       data: data
     };
-
+    console.log("######## start webhook call - axios config: \n%o", config);
     await axios(config)
     .then((resp, msg)=> {
       // telemetryService.logEvent(req, msg);
-      // logger.debug("sendMessage success - /n%o", resp);
+      logger.info("sendMessage success - /n%o", resp);
+      console.log("######## sendMessage success - /n%o", resp);
       return resp;
     })
     .catch((error) => {
