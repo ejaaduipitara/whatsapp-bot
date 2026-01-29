@@ -107,7 +107,7 @@
                 {
                     "type": "text",
                     "id": "#",
-                    "title": "Change Langauage",
+                    "title": "Change Language",
                     "postbackText": "#"
                 },
                 {
