@@ -62,7 +62,7 @@
         }
     },
     "footer_message": {
-         "message": {
+        "message": {
             "type": "quick_reply",
             "msgid": "menuSel",
             "content": {
@@ -85,33 +85,32 @@
                     "postbackText": "*"
                 }
             ]
-        },
-        "feedback_message": {
-            "message": {
-                "type": "quick_reply",
-                "msgid": "feedback",
-                "content": {
-                    "type": "text",
-                    "header": "",
-                    "text": "आशा है आपको यह पसंद आया होगा!",
-                    "caption": ""
-                },
-                "options": [
-                    {
-                        "type": "text",
-                        "id": "message-liked",
-                        "title": "👍🏻",
-                        "postbackText": "message-liked"
-                    },
-                    {
-                        "type": "text",
-                        "id": "message-disliked",
-                        "title": "👎🏻",
-                        "postbackText": "message-disliked"
-                    }
-                ]
-            }
         }
-
+    },
+    "feedback_message": {
+        "message": {
+            "type": "quick_reply",
+            "msgid": "feedback",
+            "content": {
+                "type": "text",
+                "header": "",
+                "text": "आशा है आपको यह पसंद आया होगा!",
+                "caption": ""
+            },
+            "options": [
+                {
+                    "type": "text",
+                    "id": "message-liked",
+                    "title": "👍🏻",
+                    "postbackText": "message-liked"
+                },
+                {
+                    "type": "text",
+                    "id": "message-disliked",
+                    "title": "👎🏻",
+                    "postbackText": "message-disliked"
+                }
+            ]
+        }
     }
 }
